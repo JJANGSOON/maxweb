@@ -27,6 +27,7 @@
     - white : #ffffff
     - primary : #111113
     - secondary : #858585
+    - hero background dot : #464646
 - 타이포 토큰:
 - 간격/라운드/보더 토큰:
 
@@ -172,6 +173,9 @@ Codex Interpretation Guide:
 - Mobile 레이아웃: 로고만 노출 (메뉴/CTA 숨김)
 - 정렬 기준: 수직 중앙 정렬, 헤더 좌우 패딩 `40px`
 - 최소/최대 높이: 헤더 높이 `64px`, 화면 상단에서 `40px` 오프셋(`top: 40px`)
+  - 메뉴 row 높이: `56px`
+  - 메뉴 버튼 높이: `32px`
+  - 헤더 CTA 높이: `32px`
 
 ### D. 컴포넌트 구조
 - 사용 컴포넌트 목록: `header-logo`, `header-menu-row`, `btn-menu`, `btn-primary`
@@ -179,7 +183,7 @@ Codex Interpretation Guide:
 - 우선 재사용 컴포넌트: `btn-primary`
 
 ### E. 상태(State)
-- default: 반투명 배경 `rgba(17,17,19,0.7)`, border `#2f2f2f`, 텍스트 `#898989`
+- default: 반투명 배경 `rgba(17,17,19,0.7)`, border `#2f2f2f`, 텍스트 `#858585`
 - hover: 메뉴 텍스트 `#ffffff`, 배경 `rgba(255,255,255,0.06)`
 - active: 미사용
 - disabled: 미사용
@@ -187,11 +191,12 @@ Codex Interpretation Guide:
 
 ### F. 인터랙션/플로우
 - 클릭 시 동작:
-  - 메뉴 1: `#hero`로 부드러운 스크롤 이동
+  - 로고 클릭: 페이지 맨 위로 부드러운 스크롤 이동
+  - 메뉴 1: `#heymax`로 부드러운 스크롤 이동
   - 메뉴 2: `#features-focus`로 부드러운 스크롤 이동
   - 메뉴 3: `#cta`로 부드러운 스크롤 이동
   - CTA: Google Form 새 탭 이동
-- 외부 이동 URL: `GOOGLE_FORM_URL` 상수 사용
+- 외부 이동 URL: `https://forms.gle/GonphchicsGY6aVB8`
 - 새 탭 여부: CTA만 새 탭 (`target="_blank"`)
 - 스크롤 연동 여부: 섹션 active 동기화 미사용 (hover 상태만 사용)
 
@@ -201,7 +206,7 @@ Codex Interpretation Guide:
   - `nav_click`
 - 파라미터:
   - `cta_click`: `cta_location=header`, `cta_label=맥스 데모 신청하기`
-  - `nav_click`: `nav_target=hero|features|cta`
+  - `nav_click`: `nav_target=heymax|features|cta`
 - 중복 전송 방지 규칙: 클릭 1회당 1회 전송 (throttle 없음)
 
 ### H. 구현 우선순위
@@ -210,7 +215,7 @@ Codex Interpretation Guide:
   - CTA 동작 + `cta_click` 이벤트
   - Desktop/Mobile 노출 규칙
 - Should:
-  - 메뉴 active 상태 동기화
+  - 메뉴 클릭 시 부드러운 스크롤
 - Could:
   - 스크롤 시 헤더 배경 blur 강도 조절
 - 이번 스프린트 제외 항목:
@@ -280,9 +285,9 @@ Codex Interpretation Guide:
   - 카드 라운드: `24px`(핵심 카드), `9999px`(pill)
 
 ### 1.2 반응형 브레이크포인트
-- Mobile: `0~767px`
-- Tablet: `768~1023px`
-- Desktop: `1024px+`
+- 현재 구현 정책: 데스크탑 우선(모바일 미구현)
+- Desktop: `1024px` 콘텐츠 폭 기준으로 화면 축소 대응
+- Mobile: 추후 모바일 전용 디자인 확정 후 별도 구현
 - Max width: `1024px` (콘텐츠), viewport는 full width
 
 ### 1.3 접근성/시맨틱
@@ -306,17 +311,20 @@ Codex Interpretation Guide:
 ### B. 콘텐츠
 - 타이틀: `성장하는 브랜드를 위한 회전일수 기반 / 인공지능 재고 운영 솔루션`
 - 본문: `맥스와 함께 재고 낭비는 줄이고 마진은 개선하고 / 매출은 최대화하세요`
-- 보조 문구: `맥스 AI 사용법 무료 교육`
+- 보조 문구: 없음 (삭제됨)
 - 버튼/링크 라벨: `맥스 데모 신청하기`
 
 ### C. 레이아웃
-- Desktop 레이아웃: 중앙 정렬, 상단 보조 문구 -> 타이틀 -> 본문 -> CTA 수직 스택
+- Desktop 레이아웃: 중앙 정렬, 타이틀 -> 본문 -> CTA 수직 스택
 - Mobile 레이아웃: 동일 구조, 타이틀 줄바꿈 재조정
 - 정렬 기준: 가로 중앙 정렬
-- 최소/최대 높이: `pt-36(md:pt-44)` 기준 상단 여백 확보
+- 최소/최대 높이: `pt-36(md:pt-[266px])` 기준 상단 여백 확보
+  - 헤더 기준 Hero 시작 간격: `162px`
+  - 타이틀-본문 간격: `56px`
+  - 본문-CTA 간격: `56px`
 
 ### D. 컴포넌트 구조
-- 사용 컴포넌트 목록: `hero-badge`, `hero-title`, `hero-description`, `btn-primary`
+- 사용 컴포넌트 목록: `hero-title`, `hero-description`, `btn-primary`
 - 반복 개수: 없음
 - 우선 재사용 컴포넌트: `btn-primary`
 
@@ -362,25 +370,25 @@ Codex Interpretation Guide:
 - 버튼/링크 라벨: 없음
 
 ### C. 레이아웃
-- Desktop 레이아웃: 제목 + 로고 가로열
-- Mobile 레이아웃: 로고 2~3열 래핑 또는 슬라이드
+- Desktop 레이아웃: 제목 + 로고 마키 row (폭 `1400px`)
+- Mobile 레이아웃: 로고 row 좌측 루프 유지
 - 정렬 기준: 중앙 정렬
 - 최소/최대 높이: 콘텐츠 기준 자동
 
 ### D. 컴포넌트 구조
-- 사용 컴포넌트 목록: `social-proof-title`, `logo-row`, `logo-item`
-- 반복 개수: 로고 개수만큼 반복
+- 사용 컴포넌트 목록: `social-proof-title`, `social-proof-logo-row`, `social-proof-logo-*`, `decor-gradation-left`, `decor-gradation-right`
+- 반복 개수: 로고 리스트 2회 반복(무한 루프용)
 - 우선 재사용 컴포넌트: `logo-item`
 
 ### E. 상태(State)
-- default: 정적
-- hover: 로고 hover 시 opacity 100%
+- default: 로고 좌측 무한 루프 애니메이션
+- hover: 미사용
 - active: 없음
 - disabled: 없음
 - loading/empty/error: 로고 데이터 없으면 섹션 숨김
 
 ### F. 인터랙션/플로우
-- 클릭 시 동작: 기본 없음 (링크형 로고 확정 시 추가)
+- 클릭 시 동작: 기본 없음
 - 외부 이동 URL: TBD
 - 새 탭 여부: TBD
 - 스크롤 연동 여부: 아니오
@@ -397,36 +405,56 @@ Codex Interpretation Guide:
 - 이번 스프린트 제외 항목: 동적 CMS 로고 관리
 
 ### I. QA 체크포인트
-- 픽셀 검수 기준: 로고 높이 baseline 정렬
+- 픽셀 검수 기준:
+  - 섹션 top margin `138px`
+  - 타이틀 색상 `#DCFF95`
+  - 로고 표시 높이 `18px`
 - 반응형 검수 기준: 모바일에서 로고 잘림 없음
 - 접근성 검수 기준: 장식 로고는 빈 alt, 링크 로고는 설명 alt
 
 ## [SECTION] LP/MAX/04-features-focus
 
 ### A. 목적/메시지
-- 이 섹션의 1문장 목적: 핵심 기능(리스크 모니터링/요약)을 시각적으로 설명한다.
-- 사용자에게 기대하는 행동: 기능 가치 이해 후 하단 CTA로 이동.
+- 이 섹션의 1문장 목적: 데이터 정리 자동화와 재고 리스크 감지 기능을 2개의 대표 카드로 직관적으로 전달한다.
+- 사용자에게 기대하는 행동: 핵심 기능을 이해하고 다음 섹션(워크플로우/CTA)으로 자연스럽게 이어진다.
 
 ### B. 콘텐츠
-- 타이틀: `맥스와 대화로 업무 워크플로우를 만들고 / 반복 업무에서 벗어나세요`
-- 본문: `업무 흐름을 MAX와 대화로 설계하세요...` (피그마 본문 사용)
+- 타이틀: `맥스 AI 재고 관리 에이전트에게 맡기고 / 브랜드 성장에만 집중하세요`
+- 본문: `흩어진 데이터를 맥스 AI가 알아서 정리합니다. 필요한 지표와 리스크 알림, 다음 액션까지 한 번에 받아보세요.`
 - 보조 문구: 없음
 - 버튼/링크 라벨: 없음
+- 카드 카피:
+  - 카드 1 타이틀: `흩어진 데이터를 모아 회전일수를 만들어요`
+  - 카드 1 본문: `엑셀/CSV만 있으면 바로 시작할 수 있어요. 처음부터 복잡한 설정 없이 MAX AI가 브랜드 맞춤지표를 자동으로 딱 만들어줘요.`
+  - 카드 2 타이틀: `재고 리스크 자동 감지`
+  - 카드 2 본문: `채널별 데이터에서 재고가 쌓이는 구간과 품절 임박 신호를 자동으로 찾아내고, 긴급도 순으로 정리해 대응 액션을 추천합니다.`
 
 ### C. 레이아웃
 - Desktop 레이아웃: 상단 헤드라인 컬럼 + 하단 2카드 그리드
 - Mobile 레이아웃: 세로 스택 (headline -> card-01 -> card-02)
 - 정렬 기준: 컨테이너 중앙, 카드 내부 좌상단 정렬
 - 최소/최대 높이: 콘텐츠 기준 자동
+  - 섹션 top margin: `180px` (social-proof 하단 기준)
+  - 타이틀 ↔ 본문 간격: `24px`
+  - 본문 ↔ 카드 그리드 간격: `56px`
+  - 카드 간격(gap): `24px`
+  - 카드 이미지 높이: `544px`
+  - 카드 이미지 라운드: `24px`
+  - 카드 이미지 ↔ 카드 텍스트 그룹: `40px`
+  - 카드 텍스트 그룹 좌우 패딩: `16px`
+  - 카드 타이틀 ↔ 설명 간격: `16px`
 
 ### D. 컴포넌트 구조
 - 사용 컴포넌트 목록: `feature-focus-headline-column`, `feature-focus-card-grid`, `card-feature-focus-01`, `card-feature-focus-02`
 - 반복 개수: 카드 2개
 - 우선 재사용 컴포넌트: 공통 `feature-card`
+- 카드 이미지 에셋:
+  - `public/card-image-desktop-01.png`
+  - `public/card-image-desktop-02.png`
 
 ### E. 상태(State)
 - default: 정적 카드
-- hover: 카드 hover 시 border/emphasis 소폭 강화
+- hover: 없음
 - active: 없음
 - disabled: 없음
 - loading/empty/error: 데이터형 UI는 mock 고정
@@ -449,36 +477,49 @@ Codex Interpretation Guide:
 - 이번 스프린트 제외 항목: 실데이터 연동
 
 ### I. QA 체크포인트
-- 픽셀 검수 기준: 카드 라운드/간격/보더 톤
+- 픽셀 검수 기준:
+  - 타이틀 폰트 `36px / 50px / -0.5px / 600`
+  - 본문 폰트 `16px / 24px / +0.5px / #858585`
+  - 카드 타이틀 `24px / 32px / -0.5px / 500`
+  - 카드 본문 `16px / 28px / #858585`
+  - 카드 이미지 높이 `544px`, 라운드 `24px`
 - 반응형 검수 기준: 모바일 스택 전환 시 순서 유지
 - 접근성 검수 기준: 장식 요소 `aria-hidden` 처리
 
 ## [SECTION] LP/MAX/05-features-workflow
 
 ### A. 목적/메시지
-- 이 섹션의 1문장 목적: 워크플로우 자동화 과정을 단계적으로 보여준다.
-- 사용자에게 기대하는 행동: 자동화 플로우 이해 및 CTA 관심도 상승.
+- 이 섹션의 1문장 목적: MAX와의 대화 기반 업무 자동화 흐름을 하나의 대표 화면으로 전달한다.
+- 사용자에게 기대하는 행동: 워크플로우 기능 가치를 이해하고 하단 CTA까지 자연스럽게 스크롤한다.
 
 ### B. 콘텐츠
-- 타이틀: TBD (피그마 최종 카피 확정 필요)
-- 본문: TBD
-- 보조 문구: 카드 내부 단계/설명 문구
+- 타이틀: `맥스와 대화로 업무 워크플로우를 만들고 / 반복 업무에서 벗어나세요`
+- 본문: `업무 흐름을 MAX와 대화로 설계하세요. 목표·데이터·단계만 말하면 워크플로우로 정리됩니다. 한 번 만들면 리포트·점검·알림 같은 반복 업무를 자동 처리하고, 핵심 변화와 다음 액션만 요약해 팀은 실행에 집중할 수 있어요.`
+- 보조 문구: 없음
 - 버튼/링크 라벨: 없음
 
 ### C. 레이아웃
-- Desktop 레이아웃: 헤드라인 컬럼 + 워크플로우 카드/다이어그램
-- Mobile 레이아웃: 카드 단위 세로 스택
-- 정렬 기준: 좌측 정보, 우측 보조 설명
+- Desktop 레이아웃: 상단 헤드라인 컬럼 + 하단 1개 카드
+- Mobile 레이아웃: 세로 스택 (headline -> card-01)
+- 정렬 기준: 컨테이너 중앙 정렬
 - 최소/최대 높이: 콘텐츠 기준 자동
+  - 섹션 top margin: `180px`
+  - 타이틀 ↔ 본문 간격: `24px`
+  - 본문 최대 너비: `800px` (center)
+  - 본문 ↔ 카드 간격: `48px`
+  - 카드 크기: `1024 x 625`
+  - 카드 라운드: `32px`
 
 ### D. 컴포넌트 구조
-- 사용 컴포넌트 목록: `feature-workflow-headline-column`, `feature-workflow-card-grid`, `card-feature-workflow-01`, `feature-workflow-what-row`
-- 반복 개수: 단계 노드 반복
-- 우선 재사용 컴포넌트: `workflow-node`, `chip`
+- 사용 컴포넌트 목록: `feature-workflow-headline-column`, `feature-workflow-card-grid`, `card-feature-workflow-01`
+- 반복 개수: 카드 1개
+- 우선 재사용 컴포넌트: 없음
+- 카드 이미지 에셋:
+  - `public/feature-workflow-card-grid.png`
 
 ### E. 상태(State)
-- default: 정적
-- hover: 노드 hover 강조(선택)
+- default: 정적 이미지 카드
+- hover: 없음
 - active: 없음
 - disabled: 없음
 - loading/empty/error: 미사용
@@ -495,15 +536,95 @@ Codex Interpretation Guide:
 - 중복 전송 방지 규칙: 세션당 1회
 
 ### H. 구현 우선순위
-- Must: 단계 구조 시각화
-- Should: 좌우 콘텐츠 균형/가독성
-- Could: 단계 등장 애니메이션
-- 이번 스프린트 제외 항목: 인터랙티브 편집 기능
+- Must: 헤드라인 + 1카드 구성 + 이미지 적용
+- Should: 피그마 문구/간격 정밀 매칭
+- Could: 카드 내부를 추후 실제 컴포넌트로 분해
+- 이번 스프린트 제외 항목: 카드 내부 인터랙션 구현
 
 ### I. QA 체크포인트
-- 픽셀 검수 기준: 카드/노드 정렬 및 선 연결감
-- 반응형 검수 기준: 모바일에서 읽기 순서 명확
-- 접근성 검수 기준: 단계 정보가 텍스트로도 이해 가능
+- 픽셀 검수 기준:
+  - 타이틀 폰트 `36px / 50px / -0.5px / 600`
+  - 본문 폰트 `16px / 24px / +0.5px / #858585`
+  - 본문 max-width `800px`
+  - 카드 높이 `625px`, 라운드 `32px`
+- 반응형 검수 기준: 모바일 스택 전환 시 제목 → 설명 → 카드 순서 유지
+- 접근성 검수 기준: 카드 이미지 alt 텍스트 제공
+
+## [SECTION] LP/MAX/06-heymax
+
+### A. 목적/메시지
+- 이 섹션의 1문장 목적: MAX가 어떤 반복 업무를 자동화하는지 플로우 다이어그램과 설명으로 전달한다.
+- 사용자에게 기대하는 행동: 기능 범위를 이해하고 하단 CTA 섹션으로 이동한다.
+
+### B. 콘텐츠
+- 타이틀: `맥스는 스케일업이 필요한 / 브랜드를 위해 만들어졌습니다.`
+- 본문:
+  - 제목: `반복 업무, 이제는 MAX AI와 함께 워크플로우로 전환해 더 빠르게 실행하세요.`
+  - 설명: `멀티채널 운영에서는 반복 점검과 보고가 곧 비용입니다. MAX가 대화로 업무 기준을 구조화해 워크플로우로 전환하고, 설정된 주기대로 자동 수행해 결과 요약과 실행 항목을 제공합니다.`
+  - 소제목: `MAX AI는 이런일을 잘해요`
+- 칩: `회전일수 분석`, `품절 임박 알림`, `과재고 정리 플랜`, `프로모션 성과 분석`, `채널별 재고 배분 전략`, `판매 모니터링`, `주간 · 월간 판매 현황 리포트`, `마케팅 전략`
+- 버튼/링크 라벨: 없음
+
+### C. 레이아웃
+- Desktop 레이아웃: 타이틀 아래 `what-flow-group`(좌) + 설명 컬럼(우) 2열
+- Mobile 레이아웃: 세로 스택 (flow-group -> 설명 컬럼)
+- 정렬 기준: 두 컬럼 수직 중앙 정렬
+- 최소/최대 높이: 콘텐츠 기준 자동
+  - 섹션 top margin: `180px`
+  - 타이틀 ↔ what-row 간격: `80px`
+  - 컬럼 간격: `120px`
+  - flow-group 캔버스: `373 x 500`
+  - 카드 사이즈: `180 x 72`, radius `10px`
+  - 배경 도트 레이어 높이: `900px`
+
+### D. 컴포넌트 구조
+- 사용 컴포넌트 목록: `heymax-title`, `feature-workflow-what-row`, `what-flow-group`, `what-description-column`, `chip-workflow-*`
+- 반복 개수:
+  - flow-card 6개
+  - chip 8개
+- 우선 재사용 컴포넌트: `chip`
+- 배경 장식:
+  - 도트 색상 `#464646` (hero와 동일)
+  - 섹션 전용 도트 마스크 적용(상하 + 좌우 페이드)
+
+### E. 상태(State)
+- default: 정적 카드 + 점선 흐름 애니메이션
+- hover: 없음
+- active: 없음
+- disabled: 없음
+- loading/empty/error: 미사용
+
+### F. 인터랙션/플로우
+- 클릭 시 동작: 기본 없음
+- 외부 이동 URL: 없음
+- 새 탭 여부: 없음
+- 스크롤 연동 여부: 아니오
+- 모션 규칙:
+  - 점선 애니메이션: `stroke-dasharray 3 6`
+  - duration: `2.8s linear infinite`
+  - dash offset: `0 -> -18`
+  - 라인별 `animation-delay`를 다르게 적용해 튐 현상 완화
+  - 렌더링 보정: `shape-rendering: geometricPrecision`
+
+### G. 계측(Analytics)
+- 이벤트명: `section_view`
+- 파라미터: `section=heymax`
+- 중복 전송 방지 규칙: 세션당 1회
+
+### H. 구현 우선순위
+- Must: 타이틀 + flow-group + 설명 컬럼 + 칩
+- Should: 점선 분기 형태(중앙에서 분기 후 좌우 하강) 정밀 매칭
+- Could: 노드별 강조 애니메이션
+- 이번 스프린트 제외 항목: 카드 클릭/툴팁 인터랙션
+
+### I. QA 체크포인트
+- 픽셀 검수 기준:
+  - 타이틀 폰트 `36px / 50px / -0.5px / 600`
+  - what-row top margin `80px`
+  - flow 카드 `180x72`, border `#2f2f2f`, background `#111113`
+  - 배경 도트가 상하/좌우 가장자리에서 점점 투명해지는지 확인
+- 반응형 검수 기준: 모바일에서 flow-group과 텍스트 순서 유지, 오버플로우 없음
+- 접근성 검수 기준: 장식 SVG/도트는 `aria-hidden`, 텍스트 대비 유지
 
 ## [SECTION] LP/MAX/07-pricecontact (코드 기준: `#cta`)
 
@@ -520,13 +641,16 @@ Codex Interpretation Guide:
 ### C. 레이아웃
 - Desktop 레이아웃: 좌측 타이틀, 우측 CTA 버튼
 - Mobile 레이아웃: 상단 타이틀, 하단 CTA
-- 정렬 기준: 수직 중앙
-- 최소/최대 높이: 콘텐츠 기준 자동
+- 정렬 기준: 섹션 높이 내 수직 중앙 정렬
+- 최소/최대 높이:
+  - 섹션 높이 `320px`
+  - 섹션 상/하 margin `180px`
+  - 버튼 크기 `240 x 48`
 
 ### D. 컴포넌트 구조
-- 사용 컴포넌트 목록: `cta-title`, `btn-primary`
+- 사용 컴포넌트 목록: `cta-title`, `pricecontact-cta-btn-primary`
 - 반복 개수: 없음
-- 우선 재사용 컴포넌트: `btn-primary`
+- 우선 재사용 컴포넌트: 없음 (섹션 전용 CTA 스타일)
 
 ### E. 상태(State)
 - default: 정적
@@ -549,11 +673,15 @@ Codex Interpretation Guide:
 ### H. 구현 우선순위
 - Must: 카피 + CTA 동작
 - Should: 모바일 줄바꿈 최적화
-- Could: 버튼 아이콘
+- Could: 버튼 hover 미세 효과
 - 이번 스프린트 제외 항목: 다중 문의 채널 분기
 
 ### I. QA 체크포인트
-- 픽셀 검수 기준: 제목/버튼 수평 정렬
+- 픽셀 검수 기준:
+  - 섹션 높이 `320px`
+  - 상/하 margin `180px`
+  - CTA 버튼 `240x48`
+  - 타이틀 `36px / 50px / -0.5px`
 - 반응형 검수 기준: 모바일에서 버튼 full width 여부 확인
 - 접근성 검수 기준: 버튼 명확한 접근 가능 이름
 
@@ -565,42 +693,43 @@ Codex Interpretation Guide:
 
 ### B. 콘텐츠
 - 타이틀: 없음
-- 본문: `© Splash Corp.`, `Since 2022`
-- 보조 문구: `alivesoultion@gmail.com`
-- 버튼/링크 라벨: 이메일 링크(선택)
+- 본문: `© Splash Corp.`
+- 보조 문구: 없음
+- 버튼/링크 라벨: 없음
 
 ### C. 레이아웃
-- Desktop 레이아웃: 가로 배치(회사 정보 / 연락처)
-- Mobile 레이아웃: 세로 스택
-- 정렬 기준: 하단 정렬, 작은 텍스트
+- Desktop 레이아웃: 단일 저작권 텍스트 중앙 배치
+- Mobile 레이아웃: 동일
+- 정렬 기준: 중앙 정렬, 작은 텍스트
 - 최소/최대 높이: `py-6`
+  - 배경색: `#191919`
 
 ### D. 컴포넌트 구조
-- 사용 컴포넌트 목록: `footer-meta`, `footer-contact`
+- 사용 컴포넌트 목록: `footer-meta`
 - 반복 개수: 없음
 - 우선 재사용 컴포넌트: 없음
 
 ### E. 상태(State)
 - default: 정적
-- hover: 이메일 링크 사용 시 hover underline
+- hover: 없음
 - active: 없음
 - disabled: 없음
 - loading/empty/error: 없음
 
 ### F. 인터랙션/플로우
-- 클릭 시 동작: 이메일 링크일 경우 `mailto:`
-- 외부 이동 URL: `mailto:alivesoultion@gmail.com` (선택)
+- 클릭 시 동작: 없음
+- 외부 이동 URL: 없음
 - 새 탭 여부: 해당 없음
 - 스크롤 연동 여부: 아니오
 
 ### G. 계측(Analytics)
-- 이벤트명: `footer_contact_click` (메일 링크 사용 시)
-- 파라미터: `contact_type=email`
-- 중복 전송 방지 규칙: 클릭 1회당 1회
+- 이벤트명: 없음
+- 파라미터: 없음
+- 중복 전송 방지 규칙: 해당 없음
 
 ### H. 구현 우선순위
-- Must: 회사/연락처 텍스트
-- Should: 이메일 링크 처리
+- Must: 회사 텍스트
+- Should: 배경/보더 톤 일치
 - Could: 법적 링크(개인정보처리방침)
 - 이번 스프린트 제외 항목: 다국어 footer
 
@@ -610,17 +739,17 @@ Codex Interpretation Guide:
 - 접근성 검수 기준: 링크 대비 및 포커스 표시
 
 ## 3) CTA 정책 (Draft)
-- 메인 CTA URL: `GOOGLE_FORM_URL` (실제 URL 값 별도 env/constant 관리)
+- 메인 CTA URL: `https://forms.gle/GonphchicsGY6aVB8`
 - 섹션별 CTA 위치 키: `header`, `hero`, `bottom_cta`
 - 클릭 후 동작: 외부 폼 새 탭 이동
 - 추적 이벤트: `cta_click`
 
 ## 4) 미정 항목 (TBD)
-- 항목: `LP/MAX/06-*` 구간의 공식 섹션명/역할 정리 필요 (현재 일부 노드가 `feature-workflow-what-row` 단독)
-- 의사결정자: Design Owner + Frontend Owner
-- 결정 예정일: TBD
 - 항목: `LP/MAX/07-pricecontact` vs 코드 id `cta` 네이밍 통일
 - 의사결정자: Frontend Owner
+- 결정 예정일: TBD
+- 항목: 모바일 전용 디자인/브레이크포인트 정책 확정 후 별도 구현
+- 의사결정자: Design Owner + Frontend Owner
 - 결정 예정일: TBD
 - 항목: social proof 로고 클릭 가능 여부/링크 정책
 - 의사결정자: PO/Marketing
@@ -628,3 +757,5 @@ Codex Interpretation Guide:
 
 ## 5) 변경 이력 (Draft)
 - 2026-02-14: Codex 1차 작성본 추가 (Figma node 기반)
+- 2026-02-14: Header/Hero/SocialProof/FeatureFocus 구현값 동기화 (간격, 타이포, 로고 marquee, 배경 도트)
+- 2026-02-14: FeatureWorkflow/HeyMax/PriceContact/Footer 구현값 동기화 (1카드 구조, 점선 플로우 애니메이션, 도트 마스크, CTA 240x48, footer 단순화)

@@ -1,18 +1,24 @@
 import Container from "../ui/Container";
-import PrimaryButton from "../ui/PrimaryButton";
 import { GOOGLE_FORM_URL } from "@/lib/constants";
 
 export default function CtaSection() {
   return (
-    <section className="mt-28" id="cta">
-      <Container className="rounded-3xl border border-[#2a2a2a] bg-[#090b12] p-8 md:p-12">
-        <div className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
-          <h2 className="text-3xl leading-tight tracking-[-0.02em] text-white md:text-5xl">
+    <section className="my-[180px] h-[320px]" id="cta">
+      <Container className="h-full">
+        <div className="flex h-full flex-col items-start justify-center gap-8 md:flex-row md:items-center md:justify-between">
+          <h2 className="text-[36px] font-normal leading-[50px] tracking-[-0.5px] text-white">
             맥스 AI에 대해 더 알고 싶으신가요?
             <br />
             연락주십시오.
           </h2>
-          <PrimaryButton href={GOOGLE_FORM_URL} label="문의하기" />
+          <a
+            href={GOOGLE_FORM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-12 w-[240px] items-center justify-center rounded-full bg-white px-6 text-sm font-medium text-[#111113] transition hover:bg-[#ececec]"
+          >
+            문의하기
+          </a>
         </div>
       </Container>
     </section>

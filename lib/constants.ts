@@ -1,7 +1,7 @@
-export const GOOGLE_FORM_URL = "#";
+export const GOOGLE_FORM_URL = "https://forms.gle/GonphchicsGY6aVB8";
 
 export const NAV_ITEMS = [
-  { label: "Hey Max!", href: "#hero", target: "hero" },
+  { label: "Hey Max!", href: "#heymax", target: "heymax" },
   { label: "맥스의 기능", href: "#features-focus", target: "features" },
   { label: "맥스의 가격", href: "#cta", target: "cta" },
 ];
@@ -21,24 +21,17 @@ export const SOCIAL_LOGOS = [
 
 export const FOCUS_FEATURE_CARDS = [
   {
-    title: "하이리터너를 찾기 위한 핵심수요 인사이트",
+    imageSrc: "/card-image-desktop-01-02.png",
+    imageAlt: "채널 연결을 제안하는 맥스 AI 인터페이스",
+    title: "흩어진 데이터를 모아 회전일수를 만들어요",
     description:
-      "자동으로 판매 리듬을 감지하고 성장 구간을 빠르게 포착해, 다음 액션을 우선순위로 정리합니다.",
+      "엑셀/CSV만 있으면 바로 시작할 수 있어요. 처음부터 복잡한 설정 없이 MAX AI가 브랜드 맞춤지표를 자동으로 딱 만들어줘요.",
   },
   {
+    imageSrc: "/card-image-desktop-02-02.png",
+    imageAlt: "재고 리스크를 감지하고 액션을 제안하는 맥스 AI 인터페이스",
     title: "재고 리스크 자동 감지",
     description:
-      "채널별 지표를 합쳐 과재고/품절 임박 구간을 분류하고, 제품별 실행 제안을 제공합니다.",
+      "채널별 데이터에서 재고가 쌓이는 구간과 품절 임박 신호를 자동으로 찾아내고, 긴급도 순으로 정리해 대응 액션을 추천합니다.",
   },
-];
-
-export const WORKFLOW_CHIPS = [
-  "회전일수 분석",
-  "품절 임박 알림",
-  "과재고 정리 플랜",
-  "프로모션 성과 분석",
-  "채널별 재고 배분 전략",
-  "판매 모니터링",
-  "주간 · 월간 판매 현황 리포트",
-  "마케팅 전략",
 ];

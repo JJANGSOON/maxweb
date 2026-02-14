@@ -45,3 +45,23 @@ body {
   animation: social-proof-marquee-left 28s linear infinite;
   will-change: transform;
 }
+
+@keyframes heymax-flow-dash {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+.heymax-flow-path {
+  stroke: #28eb6f;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 3 6;
+  animation: heymax-flow-dash 2.8s linear infinite;
+  will-change: stroke-dashoffset;
+  shape-rendering: geometricPrecision;
+}
