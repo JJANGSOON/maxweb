@@ -1,26 +1,67 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #111113;
+  --foreground: #ffffff;
+  --border: #2f2f2f;
+  --secondary: #858585;
+  --font-brand: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-border: var(--border);
+  --color-secondary: var(--secondary);
+  --font-sans: var(--font-brand);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-brand);
+}
+
+@keyframes social-proof-marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.social-proof-marquee {
+  animation: social-proof-marquee-left 28s linear infinite;
+  will-change: transform;
+}
+
+@keyframes heymax-flow-dash {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+.heymax-flow-path {
+  stroke: #28eb6f;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 3 6;
+  animation: heymax-flow-dash 2.8s linear infinite;
+  will-change: stroke-dashoffset;
+  shape-rendering: geometricPrecision;
 }
