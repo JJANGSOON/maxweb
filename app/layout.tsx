@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://getmax.kr"),
-  title: "MAX | AI 재고 운영 솔루션",
+  title: "MAX AI Aagent",
   description: "성장하는 브랜드를 위한 회전일수 기반 인공지능 재고 운영 솔루션",
   alternates: {
     canonical: "https://getmax.kr",
