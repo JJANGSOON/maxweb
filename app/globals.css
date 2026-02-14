@@ -31,3 +31,17 @@ body {
   color: var(--foreground);
   font-family: var(--font-brand);
 }
+
+@keyframes social-proof-marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.social-proof-marquee {
+  animation: social-proof-marquee-left 28s linear infinite;
+  will-change: transform;
+}

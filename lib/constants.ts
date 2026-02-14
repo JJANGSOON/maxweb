@@ -7,14 +7,17 @@ export const NAV_ITEMS = [
 ];
 
 export const SOCIAL_LOGOS = [
-  "CAFE24",
-  "EQL",
-  "MAZIUNTITLED",
-  "RARAN",
-  "Bruman",
-  "SEW",
-  "PlainPod",
-];
+  { name: "Musinsa", src: "/social-proof-logo-musinsa.svg", width: 118, height: 20 },
+  { name: "29CM", src: "/social-proof-logo-29cm.svg", width: 80, height: 20 },
+  { name: "Cafe24", src: "/social-proof-logo-cafe24.svg", width: 111, height: 20 },
+  { name: "EQL", src: "/social-proof-logo-eql.svg", width: 58, height: 20 },
+  { name: "Mazi", src: "/social-proof-logo-mazi.svg", width: 197, height: 20 },
+  { name: "Raran", src: "/social-proof-logo-raran.svg", width: 102, height: 20 },
+  { name: "Bruman", src: "/social-proof-logo-bruman.svg", width: 101, height: 20 },
+  { name: "SEW", src: "/social-proof-logo-sew.svg", width: 64, height: 20 },
+  { name: "Plainpod", src: "/social-proof-logo-plainpod.svg", width: 101, height: 24 },
+  { name: "LFM", src: "/social-proof-logo-lfm.svg", width: 178, height: 20 },
+] as const;
 
 export const FOCUS_FEATURE_CARDS = [
   {

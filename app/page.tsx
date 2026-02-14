@@ -14,17 +14,16 @@ export default function Home() {
         className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[1080px]"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 18% 12%, rgba(255, 204, 160, 0.22), rgba(255, 204, 160, 0) 42%), radial-gradient(circle at 82% 16%, rgba(132, 146, 211, 0.22), rgba(132, 146, 211, 0) 44%), radial-gradient(rgba(255,255,255,0.22) 1px, transparent 1px), radial-gradient(rgba(255,255,255,0.22) 1px, transparent 1px)",
-          backgroundSize: "auto, auto, 40px 40px, 40px 40px",
-          backgroundPosition: "center, center, 0 0, 20px 20px",
+            "radial-gradient(#373737 1px, transparent 1px), radial-gradient(#373737 1px, transparent 1px)",
+          backgroundSize: "40px 40px, 40px 40px",
+          backgroundPosition: "0 0, 20px 20px",
         }}
       />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[1080px]"
         style={{
-          background:
-            "linear-gradient(180deg, rgba(17,17,19,0) 0%, rgba(17,17,19,0.25) 48%, rgba(17,17,19,0.92) 100%)",
+          background: "linear-gradient(180deg, rgba(17,17,19,0) 0%, #111113 100%)",
         }}
       />
       <HeaderSection />
