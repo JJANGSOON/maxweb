@@ -6,7 +6,7 @@ export default function HeroSection() {
   return (
     <section className="pt-36 md:pt-[266px]" id="hero">
       <Container className="text-center">
-        <h1 className="mx-auto max-w-4xl text-4xl leading-tight tracking-[-0.03em] text-white md:text-6xl">
+        <h1 className="mx-auto max-w-[920px] break-keep text-4xl leading-tight tracking-[-0.03em] text-white md:text-6xl">
           성장하는 브랜드를 위한 회전일수 기반
           <br />
           인공지능 재고 운영 솔루션
