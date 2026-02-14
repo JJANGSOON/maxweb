@@ -434,7 +434,7 @@ Codex Interpretation Guide:
 - Mobile 레이아웃: 세로 스택 (headline -> card-01 -> card-02)
 - 정렬 기준: 컨테이너 중앙, 카드 내부 좌상단 정렬
 - 최소/최대 높이: 콘텐츠 기준 자동
-  - 섹션 top margin: `180px` (social-proof 하단 기준)
+  - 섹션 top margin: `240px` (social-proof 하단 기준)
   - 타이틀 ↔ 본문 간격: `24px`
   - 본문 ↔ 카드 그리드 간격: `56px`
   - 카드 간격(gap): `24px`
@@ -503,7 +503,7 @@ Codex Interpretation Guide:
 - Mobile 레이아웃: 세로 스택 (headline -> card-01)
 - 정렬 기준: 컨테이너 중앙 정렬
 - 최소/최대 높이: 콘텐츠 기준 자동
-  - 섹션 top margin: `180px`
+  - 섹션 top margin: `240px`
   - 타이틀 ↔ 본문 간격: `24px`
   - 본문 최대 너비: `800px` (center)
   - 본문 ↔ 카드 간격: `48px`
@@ -570,7 +570,7 @@ Codex Interpretation Guide:
 - Mobile 레이아웃: 세로 스택 (flow-group -> 설명 컬럼)
 - 정렬 기준: 두 컬럼 수직 중앙 정렬
 - 최소/최대 높이: 콘텐츠 기준 자동
-  - 섹션 top margin: `180px`
+  - 섹션 top margin: `240px`
   - 타이틀 ↔ what-row 간격: `80px`
   - 컬럼 간격: `120px`
   - flow-group 캔버스: `373 x 500`
@@ -644,7 +644,7 @@ Codex Interpretation Guide:
 - 정렬 기준: 섹션 높이 내 수직 중앙 정렬
 - 최소/최대 높이:
   - 섹션 높이 `320px`
-  - 섹션 상/하 margin `180px`
+  - 섹션 상/하 margin `200px`
   - 버튼 크기 `240 x 48`
 
 ### D. 컴포넌트 구조
@@ -661,7 +661,7 @@ Codex Interpretation Guide:
 
 ### F. 인터랙션/플로우
 - 클릭 시 동작: 외부 문의 폼 이동
-- 외부 이동 URL: `GOOGLE_FORM_URL`
+- 외부 이동 URL: `https://forms.gle/GonphchicsGY6aVB8`
 - 새 탭 여부: 예
 - 스크롤 연동 여부: 아니오
 
@@ -679,7 +679,7 @@ Codex Interpretation Guide:
 ### I. QA 체크포인트
 - 픽셀 검수 기준:
   - 섹션 높이 `320px`
-  - 상/하 margin `180px`
+  - 상/하 margin `200px`
   - CTA 버튼 `240x48`
   - 타이틀 `36px / 50px / -0.5px`
 - 반응형 검수 기준: 모바일에서 버튼 full width 여부 확인

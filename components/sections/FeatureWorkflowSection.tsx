@@ -3,7 +3,7 @@ import Container from "../ui/Container";
 
 export default function FeatureWorkflowSection() {
   return (
-    <section className="mt-[180px]" id="features-workflow">
+    <section className="mt-[240px]" id="features-workflow">
       <Container>
         <h2 className="text-center text-[36px] font-semibold leading-[50px] tracking-[-0.5px] text-white">
           맥스와 대화로 업무 워크플로우를 만들고

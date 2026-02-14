@@ -4,7 +4,7 @@ import { FOCUS_FEATURE_CARDS } from "@/lib/constants";
 
 export default function FeatureFocusSection() {
   return (
-    <section className="mt-[180px]" id="features-focus">
+    <section className="mt-[240px]" id="features-focus">
       <Container>
         <h2 className="text-center text-[36px] font-semibold leading-[50px] tracking-[-0.5px] text-white">
           맥스 AI 재고 관리 에이전트에게 맡기고

@@ -3,7 +3,7 @@ import { GOOGLE_FORM_URL } from "@/lib/constants";
 
 export default function CtaSection() {
   return (
-    <section className="my-[180px] h-[320px]" id="cta">
+    <section className="my-[200px] h-[320px]" id="cta">
       <Container className="h-full">
         <div className="flex h-full flex-col items-start justify-center gap-8 md:flex-row md:items-center md:justify-between">
           <h2 className="text-[36px] font-normal leading-[50px] tracking-[-0.5px] text-white">

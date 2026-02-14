@@ -22,7 +22,7 @@ const HEYMAX_CHIPS = [
 
 export default function HeyMaxSection() {
   return (
-    <section className="relative mt-[180px]" id="heymax">
+    <section className="relative mt-[240px]" id="heymax">
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[900px]">
         <div
           className="absolute inset-0"
