@@ -32,6 +32,7 @@
 - summary: text
 - content_markdown: text
 - cover_image_url: text
+- cover_alt: text
 - tags: text[]
 - status: text (`draft` | `published`)
 - published_at: timestamptz
@@ -51,6 +52,7 @@
 - Content (속성) -> 사용하지 않음 (선택)
 - 페이지 본문 블록 -> content_markdown (실제 본문 소스)
 - Cover -> cover_image_url
+- CoverAlt -> cover_alt
 - Tags (multi_select) -> tags[]
 - Status (select) -> status
 - PublishedAt (date) -> published_at
@@ -63,18 +65,19 @@
   - limit (optional)
   - tag (optional)
 - response:
-  - items: { slug, title, summary, cover_image_url, tags, published_at }[]
+  - items: { slug, title, summary, cover_image_url, cover_alt, cover_alt_resolved, tags, published_at }[]
   - pageInfo: { page, limit, hasNext }
 
 ### GET /api/blog/:slug
 - response:
-  - { slug, title, summary, content_markdown, cover_image_url, tags, published_at }
+  - { slug, title, summary, content_markdown, cover_image_url, cover_alt, cover_alt_resolved, tags, published_at }
 
 ## 6) 환경변수
 - NOTION_TOKEN
 - NOTION_DATABASE_ID
 - SUPABASE_URL
 - SUPABASE_SERVICE_ROLE_KEY
+- SUPABASE_STORAGE_BUCKET (optional, default: `blog-assets`)
 - NEXT_PUBLIC_SITE_URL
 
 ## 7) 테스트 체크리스트
@@ -108,11 +111,12 @@
    - `NOTION_DATABASE_ID`
    - `SUPABASE_URL`
    - `SUPABASE_SERVICE_ROLE_KEY`
+   - `SUPABASE_STORAGE_BUCKET` (optional)
 2. Notion DB 속성명을 아래와 정확히 맞춤
-   - `Name`(title), `Slug`(rich_text), `Summary`(rich_text), `Status`(select), `PublishedAt`(date), `Tags`(multi_select), `Cover`(files)
+   - `Name`(title), `Slug`(rich_text), `Summary`(rich_text), `Status`(select), `PublishedAt`(date), `Tags`(multi_select), `Cover`(files), `CoverAlt`(rich_text)
    - `Content` 속성은 없어도 됨 (본문은 페이지 내부 블록에서 수집)
 3. 실행
    - `npm run sync:blog-spike`
 4. 확인
    - Supabase `public.posts`에 row upsert
-   - `content_markdown`에 본문/이미지 Markdown 저장
+   - `content_markdown`의 이미지 URL이 Supabase Storage public URL로 치환됨

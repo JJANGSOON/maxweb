@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { toKstIsoString } from "@/lib/blog/time";
 
 type PostDetail = {
   id: string;
@@ -7,11 +8,19 @@ type PostDetail = {
   summary: string | null;
   content_markdown: string | null;
   cover_image_url: string | null;
+  cover_alt: string | null;
   tags: string[];
   status: "draft" | "published";
   published_at: string | null;
   created_at: string;
   updated_at: string;
+};
+
+type PostDetailResponse = PostDetail & {
+  cover_alt_resolved: string;
+  published_at_kst: string | null;
+  created_at_kst: string | null;
+  updated_at_kst: string | null;
 };
 
 function getSupabaseConfig() {
@@ -45,7 +54,7 @@ export async function GET(request: Request, context: RouteContext) {
 
   const queryParams: Record<string, string> = {
     select:
-      "id,slug,title,summary,content_markdown,cover_image_url,tags,status,published_at,created_at,updated_at",
+      "id,slug,title,summary,content_markdown,cover_image_url,cover_alt,tags,status,published_at,created_at,updated_at",
     slug: `eq.${slug}`,
     limit: "1",
   };
@@ -79,5 +88,13 @@ export async function GET(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Post not found." }, { status: 404 });
   }
 
-  return NextResponse.json({ item });
+  const itemWithKst: PostDetailResponse = {
+    ...item,
+    cover_alt_resolved: item.cover_alt || item.title,
+    published_at_kst: toKstIsoString(item.published_at),
+    created_at_kst: toKstIsoString(item.created_at),
+    updated_at_kst: toKstIsoString(item.updated_at),
+  };
+
+  return NextResponse.json({ item: itemWithKst });
 }

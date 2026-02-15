@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { toKstIsoString } from "@/lib/blog/time";
 
 type PostListItem = {
   id: string;
@@ -6,10 +7,18 @@ type PostListItem = {
   title: string;
   summary: string | null;
   cover_image_url: string | null;
+  cover_alt: string | null;
   tags: string[];
   published_at: string | null;
   created_at: string;
   updated_at: string;
+};
+
+type PostListResponseItem = PostListItem & {
+  cover_alt_resolved: string;
+  published_at_kst: string | null;
+  created_at_kst: string | null;
+  updated_at_kst: string | null;
 };
 
 function getSupabaseConfig() {
@@ -42,7 +51,7 @@ export async function GET(request: Request) {
 
   const queryParams: Record<string, string> = {
     select:
-      "id,slug,title,summary,cover_image_url,tags,published_at,created_at,updated_at",
+      "id,slug,title,summary,cover_image_url,cover_alt,tags,published_at,created_at,updated_at",
     order: "published_at.desc.nullslast,created_at.desc",
     limit: String(limit),
   };
@@ -72,5 +81,13 @@ export async function GET(request: Request) {
   }
 
   const rows = (await response.json()) as PostListItem[];
-  return NextResponse.json({ items: rows });
+  const items: PostListResponseItem[] = rows.map((row) => ({
+    ...row,
+    cover_alt_resolved: row.cover_alt || row.title,
+    published_at_kst: toKstIsoString(row.published_at),
+    created_at_kst: toKstIsoString(row.created_at),
+    updated_at_kst: toKstIsoString(row.updated_at),
+  }));
+
+  return NextResponse.json({ items });
 }

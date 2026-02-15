@@ -10,6 +10,7 @@
 - `Status` (Select): `draft` | `published`
 - `PublishedAt` (Date): 발행일
 - `Cover` (Files & media): 대표 이미지 (OG 기본 이미지)
+- `CoverAlt` (Text): 커버 이미지 대체 텍스트(접근성/SEO)
 
 ## 2) 선택 필드 (고급 SEO)
 - `SeoTitle` (Text): 탭 제목/검색 제목을 본문 제목과 다르게 운영할 때
@@ -37,7 +38,36 @@
 - `app/sitemap.ts`: published 글의 slug를 모두 포함
 - `app/robots.ts`: 기본 크롤링 허용 및 sitemap 경로 명시
 
-## 5) Slug 운영 규칙 (중요)
+## 5) SEO 필수 콘텐츠 블록 (디자인 기준)
+- 블로그 **상세 페이지**는 아래 블록을 반드시 포함한다.
+1. `h1` 제목 블록
+   - 소스: `Name`
+   - 규칙: 페이지당 `h1` 1개만 사용
+2. 요약(Description) 블록
+   - 소스: `Summary`
+   - 규칙: 본문 최상단에서 제목 바로 아래 배치
+3. 메타 정보 블록
+   - 포함: 작성자 `MAX Team`, 발행일(`PublishedAt`), (선택) 태그
+4. 커버 이미지 블록
+   - 소스: `Cover` (또는 `OgImage`)
+   - 규칙: 상세 상단에 배치, `alt` 텍스트 제공
+   - 우선순위: `CoverAlt` -> `title`
+5. 본문 콘텐츠 블록
+   - 소스: `content_markdown`
+   - 규칙: 제목 계층 유지(`h2`, `h3`), 문단/리스트/이미지/인용/코드 스타일 일관성 유지
+
+- 블로그 **목록 페이지**는 아래 블록을 권장한다.
+1. 카드 제목
+2. 카드 요약
+3. 썸네일(커버)
+4. 발행일
+5. 상세 이동 링크(`slug`)
+
+디자인 시 주의:
+- 장식 요소보다 `제목/요약/메타/본문`의 정보 위계를 먼저 고정한다.
+- SEO에 필요한 텍스트 블록이 숨김 처리되지 않도록 한다.
+
+## 6) Slug 운영 규칙 (중요)
 - `Slug`는 발행 후 **고정값**으로 운영한다.
 - 의미:
   - 기존 URL을 바꾸지 않는다.
@@ -49,7 +79,7 @@
 - 부득이하게 변경 시:
   - 301 redirect를 반드시 설정한다.
 
-## 6) 구조화 데이터(Structured Data) 기준
+## 7) 구조화 데이터(Structured Data) 기준
 - 구조화 데이터는 Notion DB 컬럼이 아니라, 웹페이지에서 JSON-LD로 렌더링한다.
 - 상세 페이지에 `BlogPosting` 스키마를 삽입한다.
 - 기본 매핑:
@@ -65,8 +95,8 @@
 - 구조화 데이터용으로 Notion에 별도 컬럼을 반드시 추가할 필요는 없다.
 - 현재 필드만으로도 구현 가능하다.
 
-## 7) 발행 체크리스트
-1. Notion에서 `Name/Slug/Summary/Status/PublishedAt/Cover` 확인
+## 8) 발행 체크리스트
+1. Notion에서 `Name/Slug/Summary/Status/PublishedAt/Cover/CoverAlt` 확인
 2. `Status = published` 변경
 3. sync 실행
 4. 상세 페이지 메타/OG 이미지 확인

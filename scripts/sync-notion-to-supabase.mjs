@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import { blocksToMarkdown } from "../lib/blog/notion-to-markdown.mjs";
 
 function loadEnvLocal() {
@@ -81,6 +82,184 @@ function slugify(input) {
     .replace(/-+/g, "-");
 }
 
+function normalizeSupabaseUrl(url) {
+  return url.endsWith("/") ? url.slice(0, -1) : url;
+}
+
+function isNotionAssetUrl(url) {
+  if (!url) return false;
+
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return (
+      host.includes("notion") ||
+      host.includes("amazonaws.com") ||
+      host.includes("notion-static.com")
+    );
+  } catch {
+    return false;
+  }
+}
+
+function getExtFromMimeType(mime) {
+  if (!mime) return "bin";
+  const type = mime.split(";")[0].trim().toLowerCase();
+
+  if (type === "image/jpeg") return "jpg";
+  if (type === "image/png") return "png";
+  if (type === "image/webp") return "webp";
+  if (type === "image/gif") return "gif";
+  if (type === "image/svg+xml") return "svg";
+  if (type === "application/pdf") return "pdf";
+  return "bin";
+}
+
+function getExtFromUrl(url) {
+  try {
+    const pathname = new URL(url).pathname;
+    const base = pathname.split("/").pop() ?? "";
+    const ext = base.includes(".") ? base.split(".").pop() : "";
+    return ext?.toLowerCase() || null;
+  } catch {
+    return null;
+  }
+}
+
+async function ensureStorageBucket({ supabaseUrl, serviceRoleKey, bucket }) {
+  const res = await fetch(`${supabaseUrl}/storage/v1/bucket`, {
+    method: "POST",
+    headers: {
+      apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: bucket,
+      name: bucket,
+      public: true,
+    }),
+  });
+
+  if (res.ok) return;
+
+  const text = await res.text();
+  if (
+    res.status === 409 ||
+    text.includes('"statusCode":"409"') ||
+    text.toLowerCase().includes("already exists")
+  ) {
+    return;
+  }
+
+  throw new Error(`Supabase create bucket error (${res.status}): ${text}`);
+}
+
+async function uploadBufferToStorage({
+  supabaseUrl,
+  serviceRoleKey,
+  bucket,
+  objectPath,
+  buffer,
+  contentType,
+}) {
+  const encodedPath = objectPath
+    .split("/")
+    .map((x) => encodeURIComponent(x))
+    .join("/");
+
+  const res = await fetch(`${supabaseUrl}/storage/v1/object/${bucket}/${encodedPath}`, {
+    method: "POST",
+    headers: {
+      apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
+      "x-upsert": "true",
+      "Content-Type": contentType || "application/octet-stream",
+    },
+    body: buffer,
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Supabase storage upload error (${res.status}): ${text}`);
+  }
+
+  return `${supabaseUrl}/storage/v1/object/public/${bucket}/${encodedPath}`;
+}
+
+async function uploadRemoteAsset({
+  url,
+  notionPageId,
+  assetType,
+  supabaseUrl,
+  serviceRoleKey,
+  bucket,
+  cache,
+}) {
+  if (!url || !isNotionAssetUrl(url)) return url;
+  if (cache.has(url)) return cache.get(url);
+
+  const fileRes = await fetch(url);
+  if (!fileRes.ok) {
+    throw new Error(`Asset download failed (${fileRes.status}): ${url}`);
+  }
+
+  const arrayBuffer = await fileRes.arrayBuffer();
+  const contentType = fileRes.headers.get("content-type") || "application/octet-stream";
+  const ext = getExtFromUrl(url) || getExtFromMimeType(contentType);
+  const hash = crypto.createHash("sha1").update(url).digest("hex").slice(0, 16);
+  const safeAssetType = assetType || "content_img";
+  const objectPath = `notion/${notionPageId}/${safeAssetType}/${hash}.${ext}`;
+
+  const publicUrl = await uploadBufferToStorage({
+    supabaseUrl,
+    serviceRoleKey,
+    bucket,
+    objectPath,
+    buffer: Buffer.from(arrayBuffer),
+    contentType,
+  });
+
+  cache.set(url, publicUrl);
+  return publicUrl;
+}
+
+async function replaceMarkdownImageUrls({
+  markdown,
+  notionPageId,
+  supabaseUrl,
+  serviceRoleKey,
+  bucket,
+  cache,
+}) {
+  if (!markdown) return markdown;
+
+  const matches = [...markdown.matchAll(/!\[([^\]]*)\]\((https?:\/\/[^)\s]+)\)/g)];
+  if (!matches.length) return markdown;
+
+  let out = markdown;
+  for (const match of matches) {
+    const full = match[0];
+    const alt = match[1];
+    const src = match[2];
+    const uploadedUrl = await uploadRemoteAsset({
+      url: src,
+      notionPageId,
+      assetType: "content_img",
+      supabaseUrl,
+      serviceRoleKey,
+      bucket,
+      cache,
+    });
+
+    if (uploadedUrl !== src) {
+      const replaced = `![${alt}](${uploadedUrl})`;
+      out = out.replace(full, replaced);
+    }
+  }
+
+  return out;
+}
+
 async function notionFetchFactory({ notionToken }) {
   return async (urlPath, options = {}) => {
     const res = await fetch(`https://api.notion.com${urlPath}`, {
@@ -151,10 +330,18 @@ async function main() {
 
   const notionToken = requiredEnv("NOTION_TOKEN");
   const notionDatabaseId = requiredEnv("NOTION_DATABASE_ID");
-  const supabaseUrl = requiredEnv("SUPABASE_URL");
+  const supabaseUrl = normalizeSupabaseUrl(requiredEnv("SUPABASE_URL"));
   const serviceRoleKey = requiredEnv("SUPABASE_SERVICE_ROLE_KEY");
+  const storageBucket = process.env.SUPABASE_STORAGE_BUCKET || "blog-assets";
 
   const notionFetch = await notionFetchFactory({ notionToken });
+  const assetCache = new Map();
+
+  await ensureStorageBucket({
+    supabaseUrl,
+    serviceRoleKey,
+    bucket: storageBucket,
+  });
 
   const pages = await queryNotionDatabase({ notionFetch, databaseId: notionDatabaseId });
   console.log(`[sync] fetched pages from notion: ${pages.length}`);
@@ -170,20 +357,39 @@ async function main() {
     const slug = slugRaw || slugify(title);
 
     const summary = getRichText(page, "Summary") || null;
+    const coverAlt = getRichText(page, "CoverAlt") || null;
     const statusRaw = (getSelect(page, "Status") || "draft").toLowerCase();
     const status = statusRaw === "published" ? "published" : "draft";
 
     const publishedAt = getDate(page, "PublishedAt");
     const tags = getMultiSelect(page, "Tags");
-    const coverImageUrl = getCoverUrl(page);
+    const coverImageUrlRaw = getCoverUrl(page);
 
-    const contentMarkdown = await blocksToMarkdown({ notionFetch, pageId: notionPageId });
+    const contentMarkdownRaw = await blocksToMarkdown({ notionFetch, pageId: notionPageId });
+    const contentMarkdown = await replaceMarkdownImageUrls({
+      markdown: contentMarkdownRaw,
+      notionPageId,
+      supabaseUrl,
+      serviceRoleKey,
+      bucket: storageBucket,
+      cache: assetCache,
+    });
+    const coverImageUrl = await uploadRemoteAsset({
+      url: coverImageUrlRaw,
+      notionPageId,
+      assetType: "cover",
+      supabaseUrl,
+      serviceRoleKey,
+      bucket: storageBucket,
+      cache: assetCache,
+    });
 
     records.push({
       notion_page_id: notionPageId,
       slug,
       title,
       summary,
+      cover_alt: coverAlt,
       content_markdown: contentMarkdown || null,
       cover_image_url: coverImageUrl,
       tags,
