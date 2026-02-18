@@ -19,6 +19,9 @@ export const SOCIAL_LOGOS = [
   { name: "LFM", src: "/social-proof-logo-lfm.svg", width: 178, height: 20 },
 ] as const;
 
+// Temporary hide list for unreleased partnership logos.
+export const TEMP_HIDDEN_SOCIAL_LOGO_NAMES = ["Musinsa", "29CM", "Cafe24", "EQL"] as const;
+
 export const FOCUS_FEATURE_CARDS = [
   {
     imageSrc: "/card-image-desktop-01-02.png",

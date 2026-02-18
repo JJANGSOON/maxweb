@@ -20,7 +20,7 @@ export default function HeaderSection() {
   };
 
   return (
-    <header className="fixed inset-x-0 top-10 z-40">
+    <header className="fixed inset-x-0 top-6 z-40">
       <div className="relative flex h-16 items-center justify-center px-10">
         <button
           type="button"
