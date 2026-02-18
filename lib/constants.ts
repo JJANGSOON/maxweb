@@ -4,6 +4,7 @@ export const NAV_ITEMS = [
   { label: "Hey Max!", href: "#heymax", target: "heymax" },
   { label: "맥스의 기능", href: "#features-focus", target: "features" },
   { label: "맥스의 가격", href: "#cta", target: "cta" },
+  { label: "블로그", href: "/blog", target: "blog" },
 ];
 
 export const SOCIAL_LOGOS = [

@@ -125,6 +125,16 @@ function getExtFromUrl(url) {
   }
 }
 
+function toStableAssetKey(url) {
+  if (!url) return "";
+  try {
+    const parsed = new URL(url);
+    return `${parsed.origin}${parsed.pathname}`;
+  } catch {
+    return url;
+  }
+}
+
 async function ensureStorageBucket({ supabaseUrl, serviceRoleKey, bucket }) {
   const res = await fetch(`${supabaseUrl}/storage/v1/bucket`, {
     method: "POST",
@@ -196,7 +206,9 @@ async function uploadRemoteAsset({
   cache,
 }) {
   if (!url || !isNotionAssetUrl(url)) return url;
-  if (cache.has(url)) return cache.get(url);
+  const stableKey = toStableAssetKey(url);
+  const cacheKey = `${notionPageId}:${assetType || "content_img"}:${stableKey}`;
+  if (cache.has(cacheKey)) return cache.get(cacheKey);
 
   const fileRes = await fetch(url);
   if (!fileRes.ok) {
@@ -205,10 +217,16 @@ async function uploadRemoteAsset({
 
   const arrayBuffer = await fileRes.arrayBuffer();
   const contentType = fileRes.headers.get("content-type") || "application/octet-stream";
-  const ext = getExtFromUrl(url) || getExtFromMimeType(contentType);
-  const hash = crypto.createHash("sha1").update(url).digest("hex").slice(0, 16);
+  const ext = getExtFromUrl(stableKey) || getExtFromMimeType(contentType);
   const safeAssetType = assetType || "content_img";
-  const objectPath = `notion/${notionPageId}/${safeAssetType}/${hash}.${ext}`;
+  const objectPath =
+    safeAssetType === "cover"
+      ? `notion/${notionPageId}/cover/cover`
+      : `notion/${notionPageId}/content_img/${crypto
+          .createHash("sha1")
+          .update(stableKey)
+          .digest("hex")
+          .slice(0, 16)}.${ext}`;
 
   const publicUrl = await uploadBufferToStorage({
     supabaseUrl,
@@ -219,7 +237,7 @@ async function uploadRemoteAsset({
     contentType,
   });
 
-  cache.set(url, publicUrl);
+  cache.set(cacheKey, publicUrl);
   return publicUrl;
 }
 

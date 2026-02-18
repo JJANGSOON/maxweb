@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync:blog-spike": "node scripts/sync-notion-to-supabase.mjs"
+    "sync:blog-spike": "node scripts/sync-notion-to-supabase.mjs",
+    "cleanup:blog-assets": "node scripts/cleanup-blog-assets.mjs"
   },
   "dependencies": {
     "next": "16.1.6",

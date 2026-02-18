@@ -1,0 +1,242 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import FooterSection from "@/components/sections/FooterSection";
+import HeaderSection from "@/components/sections/HeaderSection";
+
+type BlogListItem = {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string | null;
+  cover_image_url: string | null;
+  cover_alt: string | null;
+  tags: string[];
+  published_at: string | null;
+  created_at: string;
+};
+
+export const metadata: Metadata = {
+  title: "블로그 | MAX AI Aagent",
+  description: "MAX AI 블로그 목록",
+  alternates: {
+    canonical: "https://getmax.kr/blog",
+  },
+};
+
+function getSupabaseConfig() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_ANON_KEY;
+
+  if (!url || !key) {
+    return null;
+  }
+
+  return { url: url.endsWith("/") ? url.slice(0, -1) : url, key };
+}
+
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+}
+
+const POSTS_PER_PAGE = 5;
+
+type PostsResult = {
+  items: BlogListItem[];
+  total: number;
+};
+
+function parseTotalFromContentRange(contentRange: string | null) {
+  if (!contentRange) return 0;
+  const totalPart = contentRange.split("/")[1];
+  const total = Number.parseInt(totalPart ?? "0", 10);
+  return Number.isNaN(total) ? 0 : total;
+}
+
+async function getPublishedPosts(page: number, limit = POSTS_PER_PAGE): Promise<PostsResult> {
+  const supabase = getSupabaseConfig();
+  if (!supabase) {
+    return { items: [], total: 0 };
+  }
+
+  const safePage = Math.max(1, page);
+  const offset = (safePage - 1) * limit;
+
+  const query = new URLSearchParams({
+    select: "id,slug,title,summary,cover_image_url,cover_alt,tags,published_at,created_at",
+    status: "eq.published",
+    order: "published_at.desc.nullslast,created_at.desc",
+    limit: String(limit),
+    offset: String(offset),
+  });
+
+  const response = await fetch(`${supabase.url}/rest/v1/posts?${query.toString()}`, {
+    headers: {
+      apikey: supabase.key,
+      Authorization: `Bearer ${supabase.key}`,
+      Prefer: "count=exact",
+    },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    return { items: [], total: 0 };
+  }
+
+  const items = (await response.json()) as BlogListItem[];
+  const total = parseTotalFromContentRange(response.headers.get("content-range"));
+
+  return { items, total };
+}
+
+type BlogListPageProps = {
+  searchParams?: Promise<{
+    page?: string;
+  }>;
+};
+
+export default async function BlogListPage({ searchParams }: BlogListPageProps) {
+  const params = (await searchParams) ?? {};
+  const page = Math.max(1, Number.parseInt(params.page ?? "1", 10) || 1);
+  const { items: posts, total } = await getPublishedPosts(page, POSTS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(total / POSTS_PER_PAGE));
+  const showPagination = totalPages > 1;
+
+  return (
+    <div className="flex min-h-screen flex-col overflow-x-clip bg-[#111113]">
+      <HeaderSection />
+
+      <main className="mx-auto w-full max-w-[680px] flex-1 pt-[176px]">
+        <section className="w-full">
+          <h1 className="text-[30px] leading-[50px] font-semibold tracking-[0.5px] text-white">블로그</h1>
+
+          <div className="mt-20 flex flex-col gap-16">
+            {posts.map((post) => {
+              const displayDate = formatDate(post.published_at ?? post.created_at);
+              const coverAlt = post.cover_alt || post.title;
+              const tags = (post.tags ?? []).slice(0, 2);
+
+              return (
+                <article key={post.id} className="flex w-full items-end gap-8">
+                  <div className="flex min-w-0 flex-1 flex-col gap-6">
+                    <div className="flex w-full flex-col gap-2">
+                      <div className="flex gap-2">
+                        {tags.map((tag) => (
+                          <span
+                            key={`${post.id}-${tag}`}
+                            className={
+                              // "inline-flex h-8 items-center justify-center rounded-full border border-[#2f2f2f] bg-[#202020] px-3 text-xs leading-4 text-white"
+                              "inline-flex h-8 items-center justify-center rounded-full bg-[#2A2416] px-3 text-xs leading-4 text-[#FCD34D]"
+                            }
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      <h2 className="overflow-hidden text-ellipsis whitespace-nowrap text-[20px] leading-8 font-semibold text-white">
+                        <Link href={`/blog/${post.slug}`} className="hover:opacity-85">
+                          {post.title}
+                        </Link>
+                      </h2>
+
+                      <p
+                        className="text-sm leading-[22px] text-[#858585]"
+                        style={{
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {post.summary || ""}
+                      </p>
+                    </div>
+
+                    <p className="text-xs leading-4 text-[#858585]">{displayDate}</p>
+                  </div>
+
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="block h-[124px] w-[228px] shrink-0 overflow-hidden rounded-xl"
+                  >
+                    {post.cover_image_url ? (
+                      <Image
+                        src={post.cover_image_url}
+                        alt={coverAlt}
+                        width={228}
+                        height={124}
+                        sizes="228px"
+                        className="h-full w-full rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div className="h-full w-full rounded-xl bg-[#202020]" />
+                    )}
+                  </Link>
+                </article>
+              );
+            })}
+          </div>
+
+          {showPagination ? (
+            <div className="mt-20 flex items-center justify-center gap-2 text-sm leading-5">
+              {page > 1 ? (
+                <Link
+                  href={page === 2 ? "/blog" : `/blog?page=${page - 1}`}
+                  className="inline-flex min-h-9 items-center justify-center rounded-lg px-4 py-2 text-[#858585]"
+                  aria-label="이전 페이지"
+                >
+                  &lt;
+                </Link>
+              ) : (
+                <span className="inline-flex min-h-9 items-center justify-center rounded-lg px-4 py-2 text-[#4f4f4f]">
+                  &lt;
+                </span>
+              )}
+
+              {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((pageNo) => (
+                <Link
+                  key={pageNo}
+                  href={pageNo === 1 ? "/blog" : `/blog?page=${pageNo}`}
+                  className={`inline-flex min-h-9 w-[34px] items-center justify-center rounded-lg px-4 py-2 ${
+                    pageNo === page
+                      ? "border border-white text-white"
+                      : "text-[#858585]"
+                  }`}
+                >
+                  {pageNo}
+                </Link>
+              ))}
+
+              {page < totalPages ? (
+                <Link
+                  href={`/blog?page=${page + 1}`}
+                  className="inline-flex min-h-9 items-center justify-center rounded-lg px-4 py-2 text-[#858585]"
+                  aria-label="다음 페이지"
+                >
+                  &gt;
+                </Link>
+              ) : (
+                <span className="inline-flex min-h-9 items-center justify-center rounded-lg px-4 py-2 text-[#4f4f4f]">
+                  &gt;
+                </span>
+              )}
+            </div>
+          ) : null}
+        </section>
+
+      </main>
+
+      <FooterSection />
+    </div>
+  );
+}

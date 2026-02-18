@@ -89,6 +89,7 @@
 - [ ] `/api/blog` 응답 시간/형식 확인
 - [ ] `/api/blog/:slug` 404 처리 확인
 - [ ] 클라이언트 fetch로 목록 데이터 렌더 확인
+- [ ] 미참조 스토리지 파일 cleanup 동작 확인 (dry-run -> 실제 삭제)
 
 ## 8) 구현 단계 제안
 1. Supabase 스키마 생성
@@ -120,3 +121,13 @@
 4. 확인
    - Supabase `public.posts`에 row upsert
    - `content_markdown`의 이미지 URL이 Supabase Storage public URL로 치환됨
+
+## 11) 스토리지 정리 (Cleanup)
+- 스크립트: `npm run cleanup:blog-assets`
+- 동작:
+  - `posts`에서 참조 중인 스토리지 경로를 수집
+  - 버킷 내 `notion/` 파일 목록과 비교
+  - 참조되지 않고 `CLEANUP_RETENTION_DAYS` 지난 파일만 삭제
+- 권장:
+  - 먼저 `CLEANUP_DRY_RUN=true`로 후보 확인
+  - 이후 `CLEANUP_DRY_RUN=false`로 실제 삭제

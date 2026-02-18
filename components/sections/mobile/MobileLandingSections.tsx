@@ -22,7 +22,8 @@ function MobileHeader() {
       <div className="mx-auto w-full px-4">
         <div className="h-14 rounded-full border border-[#2f2f2f] bg-[rgba(17,17,19,0.7)] pl-4 pr-3 py-3 backdrop-blur-[13px]">
           <div className="flex items-center justify-between">
-            <a href="#" aria-label="페이지 맨 위로 이동">
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a href="/" aria-label="홈으로 이동">
               <Image
                 src="/header-logo.svg"
                 alt="MAX"

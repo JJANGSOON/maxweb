@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import TopProgressBar from "@/components/ui/TopProgressBar";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -48,7 +49,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <TopProgressBar />
+        {children}
+      </body>
     </html>
   );
 }
