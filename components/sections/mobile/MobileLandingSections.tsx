@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { GOOGLE_FORM_URL, SOCIAL_LOGOS, TEMP_HIDDEN_SOCIAL_LOGO_NAMES } from "@/lib/constants";
+import { GOOGLE_FORM_URL, SOCIAL_LOGOS, TEMP_HIDDEN_SOCIAL_LOGO_NAME_SET } from "@/lib/constants";
 
 const HEYMAX_CHIPS = [
   "회전일수 분석",
@@ -76,7 +76,7 @@ function MobileHero() {
 }
 
 function MobileSocialProof() {
-  const visibleLogos = SOCIAL_LOGOS.filter((logo) => !TEMP_HIDDEN_SOCIAL_LOGO_NAMES.includes(logo.name));
+  const visibleLogos = SOCIAL_LOGOS.filter((logo) => !TEMP_HIDDEN_SOCIAL_LOGO_NAME_SET.has(logo.name));
   const marqueeLogos = [...visibleLogos, ...visibleLogos, ...visibleLogos, ...visibleLogos];
 
   return (
