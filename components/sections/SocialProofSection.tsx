@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Container from "../ui/Container";
-import { SOCIAL_LOGOS, TEMP_HIDDEN_SOCIAL_LOGO_NAMES } from "@/lib/constants";
+import { SOCIAL_LOGOS, TEMP_HIDDEN_SOCIAL_LOGO_NAME_SET } from "@/lib/constants";
 
 export default function SocialProofSection() {
-  const visibleLogos = SOCIAL_LOGOS.filter((logo) => !TEMP_HIDDEN_SOCIAL_LOGO_NAMES.includes(logo.name));
+  const visibleLogos = SOCIAL_LOGOS.filter((logo) => !TEMP_HIDDEN_SOCIAL_LOGO_NAME_SET.has(logo.name));
   const marqueeLogos = [...visibleLogos, ...visibleLogos, ...visibleLogos, ...visibleLogos];
 
   return (

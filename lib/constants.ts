@@ -22,6 +22,7 @@ export const SOCIAL_LOGOS = [
 
 // Temporary hide list for unreleased partnership logos.
 export const TEMP_HIDDEN_SOCIAL_LOGO_NAMES = ["Musinsa", "29CM", "Cafe24", "EQL"] as const;
+export const TEMP_HIDDEN_SOCIAL_LOGO_NAME_SET = new Set<string>(TEMP_HIDDEN_SOCIAL_LOGO_NAMES);
 
 export const FOCUS_FEATURE_CARDS = [
   {
