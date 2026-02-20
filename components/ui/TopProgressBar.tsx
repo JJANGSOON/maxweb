@@ -67,6 +67,45 @@ export default function TopProgressBar() {
     doneTopProgress();
   }, [pathname, searchParams]);
 
+  useEffect(() => {
+    const onDocumentClick = (event: MouseEvent) => {
+      if (event.defaultPrevented) return;
+      if (event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const anchor = target.closest("a");
+      if (!(anchor instanceof HTMLAnchorElement)) return;
+
+      const href = anchor.getAttribute("href");
+      if (!href || href.startsWith("#")) return;
+      if (anchor.target === "_blank") return;
+      if (anchor.hasAttribute("download")) return;
+
+      let nextUrl: URL;
+      try {
+        nextUrl = new URL(anchor.href, window.location.href);
+      } catch {
+        return;
+      }
+
+      if (nextUrl.origin !== window.location.origin) return;
+
+      const currentPath = `${window.location.pathname}${window.location.search}`;
+      const nextPath = `${nextUrl.pathname}${nextUrl.search}`;
+      if (currentPath === nextPath) return;
+
+      startTopProgress();
+    };
+
+    document.addEventListener("click", onDocumentClick, true);
+    return () => {
+      document.removeEventListener("click", onDocumentClick, true);
+    };
+  }, []);
+
   if (!visible) return null;
 
   return (

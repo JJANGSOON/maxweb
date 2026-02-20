@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FooterSection from "@/components/sections/FooterSection";
 import HeaderSection from "@/components/sections/HeaderSection";
+import ProgressLink from "@/components/ui/ProgressLink";
 
 type BlogListItem = {
   id: string;
@@ -115,27 +116,34 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
     <div className="flex min-h-screen flex-col overflow-x-clip bg-[#111113]">
       <HeaderSection />
 
-      <main className="mx-auto w-full max-w-[680px] flex-1 pt-[176px]">
+      <main className="mx-auto w-full max-w-[680px] flex-1 px-4 pt-[128px] md:px-0 md:pt-[176px]">
         <section className="w-full">
-          <h1 className="text-[30px] leading-[50px] font-semibold tracking-[0.5px] text-white">블로그</h1>
+          <h1
+            className="text-[28px] leading-10 font-semibold tracking-[0.5px] text-white md:text-[30px] md:leading-[50px]"
+            style={{
+              fontFamily: "var(--font-brand)",
+            }}
+          >
+            블로그
+          </h1>
 
-          <div className="mt-20 flex flex-col gap-16">
+          <div className="mt-12 flex flex-col gap-12 md:mt-20 md:gap-16">
             {posts.map((post) => {
               const displayDate = formatDate(post.published_at ?? post.created_at);
               const coverAlt = post.cover_alt || post.title;
-              const tags = (post.tags ?? []).slice(0, 2);
+              const tags = (post.tags ?? []).slice(0, 3);
 
               return (
-                <article key={post.id} className="flex w-full items-end gap-8">
+                <article key={post.id} className="flex w-full flex-col-reverse gap-6 md:flex-row md:items-end md:gap-8">
                   <div className="flex min-w-0 flex-1 flex-col gap-6">
                     <div className="flex w-full flex-col gap-2">
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
                         {tags.map((tag) => (
                           <span
                             key={`${post.id}-${tag}`}
                             className={
                               // "inline-flex h-8 items-center justify-center rounded-full border border-[#2f2f2f] bg-[#202020] px-3 text-xs leading-4 text-white"
-                              "inline-flex h-8 items-center justify-center rounded-full bg-[#2A2416] px-3 text-xs leading-4 text-[#FCD34D]"
+                              "inline-flex h-8 items-center justify-center rounded-full bg-[#313922] px-3 text-xs leading-4 text-[#DCFF95]"
                             }
                           >
                             {tag}
@@ -143,10 +151,10 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                         ))}
                       </div>
 
-                      <h2 className="overflow-hidden text-ellipsis whitespace-nowrap text-[20px] leading-8 font-semibold text-white">
-                        <Link href={`/blog/${post.slug}`} className="hover:opacity-85">
+                      <h2 className="text-[20px] leading-8 font-semibold text-white md:overflow-hidden md:text-ellipsis md:whitespace-nowrap">
+                        <ProgressLink href={`/blog/${post.slug}`} className="hover:opacity-85">
                           {post.title}
-                        </Link>
+                        </ProgressLink>
                       </h2>
 
                       <p
@@ -165,30 +173,30 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                     <p className="text-xs leading-4 text-[#858585]">{displayDate}</p>
                   </div>
 
-                  <Link
+                  <ProgressLink
                     href={`/blog/${post.slug}`}
-                    className="block h-[124px] w-[228px] shrink-0 overflow-hidden rounded-xl"
+                    className="block h-[200px] w-full shrink-0 overflow-hidden rounded-xl md:h-[124px] md:w-[228px]"
                   >
                     {post.cover_image_url ? (
                       <Image
                         src={post.cover_image_url}
                         alt={coverAlt}
-                        width={228}
-                        height={124}
-                        sizes="228px"
+                        width={456}
+                        height={248}
+                        sizes="(max-width: 768px) 100vw, 228px"
                         className="h-full w-full rounded-xl object-cover"
                       />
                     ) : (
                       <div className="h-full w-full rounded-xl bg-[#202020]" />
                     )}
-                  </Link>
+                  </ProgressLink>
                 </article>
               );
             })}
           </div>
 
           {showPagination ? (
-            <div className="mt-20 flex items-center justify-center gap-2 text-sm leading-5">
+            <div className="mt-16 flex flex-wrap items-center justify-center gap-2 text-sm leading-5 md:mt-20">
               {page > 1 ? (
                 <Link
                   href={page === 2 ? "/blog" : `/blog?page=${page - 1}`}
