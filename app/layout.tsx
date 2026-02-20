@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import TopProgressBar from "@/components/ui/TopProgressBar";
 import "./globals.css";
 
@@ -50,7 +51,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased">
-        <TopProgressBar />
+        <Suspense fallback={null}>
+          <TopProgressBar />
+        </Suspense>
         {children}
       </body>
     </html>
