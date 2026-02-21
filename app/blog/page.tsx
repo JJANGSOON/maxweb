@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import FooterSection from "@/components/sections/FooterSection";
 import HeaderSection from "@/components/sections/HeaderSection";
 import ProgressLink from "@/components/ui/ProgressLink";
@@ -50,11 +49,29 @@ function formatDate(dateString: string) {
 }
 
 const POSTS_PER_PAGE = 5;
+const BLOG_REVALIDATE_SECONDS = 60;
 
 type PostsResult = {
   items: BlogListItem[];
   total: number;
 };
+
+function getVisiblePages(currentPage: number, totalPages: number, windowSize = 5) {
+  if (totalPages <= windowSize) {
+    return Array.from({ length: totalPages }, (_, idx) => idx + 1);
+  }
+
+  const half = Math.floor(windowSize / 2);
+  let start = Math.max(1, currentPage - half);
+  let end = start + windowSize - 1;
+
+  if (end > totalPages) {
+    end = totalPages;
+    start = end - windowSize + 1;
+  }
+
+  return Array.from({ length: windowSize }, (_, idx) => start + idx);
+}
 
 function parseTotalFromContentRange(contentRange: string | null) {
   if (!contentRange) return 0;
@@ -86,7 +103,10 @@ async function getPublishedPosts(page: number, limit = POSTS_PER_PAGE): Promise<
       Authorization: `Bearer ${supabase.key}`,
       Prefer: "count=exact",
     },
-    cache: "no-store",
+    next: {
+      revalidate: BLOG_REVALIDATE_SECONDS,
+      tags: ["blog:posts"],
+    },
   });
 
   if (!response.ok) {
@@ -111,13 +131,14 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
   const { items: posts, total } = await getPublishedPosts(page, POSTS_PER_PAGE);
   const totalPages = Math.max(1, Math.ceil(total / POSTS_PER_PAGE));
   const showPagination = totalPages > 1;
+  const paginationItems = getVisiblePages(page, totalPages);
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-clip bg-[#111113]">
       <HeaderSection />
 
-      <main className="mx-auto w-full max-w-[680px] flex-1 px-4 pt-[128px] md:px-0 md:pt-[176px]">
-        <section className="w-full">
+      <main className="mx-auto w-full max-w-[680px] flex-1 px-5 pt-[128px] md:px-0 md:pt-[176px]">
+        <section className="w-full pb-20 md:pb-[120px]">
           <h1
             className="text-[28px] leading-10 font-semibold tracking-[0.5px] text-white md:text-[30px] md:leading-[50px]"
             style={{
@@ -151,7 +172,7 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
                         ))}
                       </div>
 
-                      <h2 className="text-[20px] leading-8 font-semibold text-white md:overflow-hidden md:text-ellipsis md:whitespace-nowrap">
+                      <h2 className="overflow-hidden text-[20px] leading-8 font-semibold text-white [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] md:block md:text-ellipsis md:whitespace-nowrap md:[-webkit-line-clamp:unset]">
                         <ProgressLink href={`/blog/${post.slug}`} className="hover:opacity-85">
                           {post.title}
                         </ProgressLink>
@@ -198,44 +219,50 @@ export default async function BlogListPage({ searchParams }: BlogListPageProps) 
           {showPagination ? (
             <div className="mt-16 flex flex-wrap items-center justify-center gap-2 text-sm leading-5 md:mt-20">
               {page > 1 ? (
-                <Link
+                <ProgressLink
                   href={page === 2 ? "/blog" : `/blog?page=${page - 1}`}
-                  className="inline-flex min-h-9 items-center justify-center rounded-lg px-4 py-2 text-[#858585]"
+                  className="inline-flex h-9 w-[50px] items-center justify-center rounded-lg"
                   aria-label="이전 페이지"
                 >
-                  &lt;
-                </Link>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/icon-chevron-left.svg" alt="" aria-hidden className="h-[18px] w-[18px]" />
+                </ProgressLink>
               ) : (
-                <span className="inline-flex min-h-9 items-center justify-center rounded-lg px-4 py-2 text-[#4f4f4f]">
-                  &lt;
+                <span className="inline-flex h-9 w-[50px] items-center justify-center rounded-lg">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/icon-chevron-left.svg" alt="" aria-hidden className="h-[18px] w-[18px] opacity-40" />
                 </span>
               )}
 
-              {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((pageNo) => (
-                <Link
-                  key={pageNo}
-                  href={pageNo === 1 ? "/blog" : `/blog?page=${pageNo}`}
-                  className={`inline-flex min-h-9 w-[34px] items-center justify-center rounded-lg px-4 py-2 ${
-                    pageNo === page
-                      ? "border border-white text-white"
-                      : "text-[#858585]"
-                  }`}
-                >
-                  {pageNo}
-                </Link>
-              ))}
+              {paginationItems.map((item) => {
+                return (
+                  <ProgressLink
+                    key={item}
+                    href={item === 1 ? "/blog" : `/blog?page=${item}`}
+                    className={`inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-3 transition ${
+                      item === page
+                        ? "border border-white text-white"
+                        : "text-[#858585] hover:text-white"
+                    }`}
+                  >
+                    {item}
+                  </ProgressLink>
+                );
+              })}
 
               {page < totalPages ? (
-                <Link
+                <ProgressLink
                   href={`/blog?page=${page + 1}`}
-                  className="inline-flex min-h-9 items-center justify-center rounded-lg px-4 py-2 text-[#858585]"
+                  className="inline-flex h-9 w-[50px] items-center justify-center rounded-lg"
                   aria-label="다음 페이지"
                 >
-                  &gt;
-                </Link>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/icon-chevron-right.svg" alt="" aria-hidden className="h-[18px] w-[18px]" />
+                </ProgressLink>
               ) : (
-                <span className="inline-flex min-h-9 items-center justify-center rounded-lg px-4 py-2 text-[#4f4f4f]">
-                  &gt;
+                <span className="inline-flex h-9 w-[50px] items-center justify-center rounded-lg">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/icon-chevron-right.svg" alt="" aria-hidden className="h-[18px] w-[18px] opacity-40" />
                 </span>
               )}
             </div>

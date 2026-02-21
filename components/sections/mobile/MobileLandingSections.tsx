@@ -16,38 +16,6 @@ function MobileContainer({ children, className = "" }: { children: React.ReactNo
   return <div className={`mx-auto w-full px-4 ${className}`}>{children}</div>;
 }
 
-function MobileHeader() {
-  return (
-    <header className="fixed inset-x-0 top-3 z-40">
-      <div className="mx-auto w-full px-4">
-        <div className="h-14 rounded-full border border-[#2f2f2f] bg-[rgba(17,17,19,0.7)] pl-4 pr-3 py-3 backdrop-blur-[13px]">
-          <div className="flex items-center justify-between">
-            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/" aria-label="홈으로 이동">
-              <Image
-                src="/header-logo.svg"
-                alt="MAX"
-                width={62}
-                height={12}
-                className="h-[calc(var(--spacing)*4)] w-auto"
-                priority
-              />
-            </a>
-            <a
-              href={GOOGLE_FORM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-8 w-[132px] items-center justify-center rounded-full bg-white text-[13px] font-normal leading-none text-[#111113]"
-            >
-              <span className="inline-flex h-full items-center leading-none">맥스 데모 신청하기</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
-
 function MobileHero() {
   return (
     <section id="hero" className="min-h-[324px]">
@@ -323,7 +291,6 @@ function MobileFooter() {
 export default function MobileLandingSections() {
   return (
     <>
-      <MobileHeader />
       <div className="relative min-h-screen overflow-x-hidden bg-[#111113]">
         <div
           aria-hidden

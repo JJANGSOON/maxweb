@@ -11,6 +11,7 @@ import MobileLandingSections from "@/components/sections/mobile/MobileLandingSec
 export default function Home() {
   return (
     <>
+      <HeaderSection />
       <div className="relative min-h-screen overflow-x-clip bg-[#111113] max-[1024px]:hidden">
         <div
           aria-hidden
@@ -29,7 +30,6 @@ export default function Home() {
             background: "linear-gradient(180deg, rgba(17,17,19,0) 0%, #111113 100%)",
           }}
         />
-        <HeaderSection />
         <main className="relative z-10">
           <HeroSection />
           <SocialProofSection />

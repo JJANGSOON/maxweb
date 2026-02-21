@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import BlogDemoCta from "@/components/sections/BlogDemoCta";
 import FooterSection from "@/components/sections/FooterSection";
 import HeaderSection from "@/components/sections/HeaderSection";
-import { GOOGLE_FORM_URL } from "@/lib/constants";
+import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
 
 type BlogDetail = {
   id: string;
@@ -388,29 +388,9 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-clip bg-[#111113]">
-      <div className="md:hidden">
-        <header className="fixed inset-x-0 top-3 z-40 px-4">
-          <div className="rounded-full border border-[#2f2f2f] bg-[rgba(17,17,19,0.7)] px-4 py-3 backdrop-blur-[13px]">
-            <div className="flex items-center justify-between">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/header-logo.svg" alt="MAX" className="h-3 w-auto" />
-              <a
-                href={GOOGLE_FORM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex h-8 items-center justify-center rounded-full bg-white px-4 text-sm leading-[22px] text-[#111113]"
-              >
-                맥스 데모 신청하기
-              </a>
-            </div>
-          </div>
-        </header>
-      </div>
-      <div className="hidden md:block">
-        <HeaderSection />
-      </div>
+      <HeaderSection />
 
-      <main className="mx-auto w-full max-w-[680px] flex-1 px-4 pt-[108px] md:px-0 md:pt-[176px]">
+      <main className="mx-auto w-full max-w-[680px] flex-1 px-5 pt-[108px] md:px-0 md:pt-[176px]">
         <section>
           <h1 className="pb-2 text-[28px] leading-9 font-semibold tracking-[-0.5px] text-white md:pb-8 md:text-[36px] md:leading-[46px] md:tracking-[0.5px]">
             {post.title}
@@ -466,6 +446,8 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       <div className="hidden md:block">
         <FooterSection />
       </div>
+
+      <ScrollToTopButton />
     </div>
   );
 }
