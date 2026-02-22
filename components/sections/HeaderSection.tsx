@@ -33,6 +33,18 @@ export default function HeaderSection({ showBlog = true }: HeaderSectionProps) {
     });
   };
 
+  const trackHeaderCtaClick = () => {
+    const gtag = (
+      window as Window & { gtag?: (...args: unknown[]) => void }
+    ).gtag;
+
+    gtag?.("event", "header_cta_click", {
+      cta_label: "데모 신청하기",
+      cta_href: GOOGLE_FORM_URL,
+      page_path: window.location.pathname,
+    });
+  };
+
   const handlePageNavigate = (href: string) => {
     const current = pathname ?? "/";
     if (href === current) return;
@@ -49,21 +61,21 @@ export default function HeaderSection({ showBlog = true }: HeaderSectionProps) {
     (event: MouseEvent<HTMLAnchorElement>) => {
       trackHeaderMenuClick(label, href);
 
-    if (!href.startsWith("#")) {
+      if (!href.startsWith("#")) {
+        event.preventDefault();
+        void handlePageNavigate(href);
+        return;
+      }
+
       event.preventDefault();
-      void handlePageNavigate(href);
-      return;
-    }
+      const section = document.querySelector(href);
+      if (!section) {
+        void handlePageNavigate(`/${href}`);
+        return;
+      }
 
-    event.preventDefault();
-    const section = document.querySelector(href);
-    if (!section) {
-      void handlePageNavigate(`/${href}`);
-      return;
-    }
-
-    const y = section.getBoundingClientRect().top + window.scrollY - 140;
-    window.scrollTo({ top: y, behavior: "smooth" });
+      const y = section.getBoundingClientRect().top + window.scrollY - 140;
+      window.scrollTo({ top: y, behavior: "smooth" });
     };
 
   return (
@@ -99,6 +111,7 @@ export default function HeaderSection({ showBlog = true }: HeaderSectionProps) {
               <PrimaryButton
                 href={GOOGLE_FORM_URL}
                 label="데모 신청하기"
+                onClick={trackHeaderCtaClick}
                 className="!h-8 !px-3 !gap-1 text-[12px] !font-normal whitespace-nowrap"
               />
             </div>
@@ -133,7 +146,12 @@ export default function HeaderSection({ showBlog = true }: HeaderSectionProps) {
               {item.label}
             </a>
           ))}
-          <PrimaryButton href={GOOGLE_FORM_URL} label="데모 신청하기" className="!h-8 !px-4 text-xs" />
+          <PrimaryButton
+            href={GOOGLE_FORM_URL}
+            label="데모 신청하기"
+            onClick={trackHeaderCtaClick}
+            className="!h-8 !px-4 text-xs"
+          />
         </nav>
       </div>
     </header>
