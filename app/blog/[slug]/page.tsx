@@ -372,6 +372,19 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
           ]
         : undefined,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.summary || post.title,
+      images: post.cover_image_url
+        ? [
+            {
+              url: post.cover_image_url,
+              alt: coverAlt,
+            },
+          ]
+        : undefined,
+    },
   };
 }
 

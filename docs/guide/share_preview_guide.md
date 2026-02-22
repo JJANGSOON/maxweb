@@ -101,6 +101,58 @@ Tip for Codex:
 - `og:image`: TBD
 - `twitter:image`: TBD
 
+### 4.1 블로그 포스트 공유 템플릿
+아래 블록을 글마다 복사해서 값만 채우세요.
+
+#### [BLOG POST] /blog/{slug}
+- 작성일:
+- 작성자:
+- 상태: `draft | review | final`
+- canonical: `https://getmax.kr/blog/{slug}`
+
+- 목적:
+  - 예) 카카오/SNS 공유 시 클릭률 개선
+
+- 기본 문구(원문):
+  - `post.title`: 블로그 타이틀 사용
+  - `post.summary`: 블로그 요약 사용
+  - `post.cover_image_url`: 블로그 커버 이미지 사용
+  - `post.cover_alt`: DB의 `cover_alt` 값 사용
+
+- Open Graph
+  - `og:title`: 블로그 타이틀 사용 (`post.title`)
+  - `og:description`: 블로그 요약 사용 (`post.summary`)
+  - `og:url`: `https://getmax.kr/blog/{slug}`
+  - `og:type`: `article`
+  - `og:image` (절대경로): 블로그 커버 이미지 사용 (`post.cover_image_url`)
+  - `og:image:width`: `1200` (권장)
+  - `og:image:height`: `630` (권장)
+  - `og:image:alt`: `post.cover_alt` 사용
+
+- Twitter Card
+  - `twitter:card`: `summary_large_image`
+  - `twitter:title`: Open Graph와 동일 (`post.title`)
+  - `twitter:description`: Open Graph와 동일 (`post.summary`)
+  - `twitter:image` (절대경로): Open Graph와 동일 (`post.cover_image_url`)
+  - `twitter:image:alt`: Open Graph와 동일 (`post.cover_alt`)
+
+- 선택 확장 필드(운영 시)
+  - `article:published_time`:
+  - `article:modified_time`:
+  - `article:author`: `MAX Team`
+  - `article:tag`:
+
+- QA 체크
+  - [ ] 카카오톡 공유 미리보기 확인
+  - [ ] 슬랙 공유 미리보기 확인
+  - [ ] 디스코드 공유 미리보기 확인
+  - [ ] Facebook Sharing Debugger 재스크랩 확인
+  - [ ] X(Twitter) Card Validator 확인
+  - [ ] 썸네일 크롭/가독성 확인
+  - [ ] 제목/설명 줄임 확인
+
+- 비고:
+
 <!--
 필요한 페이지 수만큼 [PAGE] 블록을 복제해 사용하세요.
 -->
