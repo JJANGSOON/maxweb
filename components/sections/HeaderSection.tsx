@@ -8,9 +8,14 @@ import PrimaryButton from "../ui/PrimaryButton";
 import { startTopProgress } from "../ui/TopProgressBar";
 import { GOOGLE_FORM_URL, NAV_ITEMS } from "@/lib/constants";
 
-export default function HeaderSection() {
+type HeaderSectionProps = {
+  showBlog?: boolean;
+};
+
+export default function HeaderSection({ showBlog = true }: HeaderSectionProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const navItems = showBlog ? NAV_ITEMS : NAV_ITEMS.filter((item) => item.href !== "/blog");
 
   const handleLogoClick = () => {
     window.location.assign("/");
@@ -66,13 +71,15 @@ export default function HeaderSection() {
               />
             </button>
             <div className="flex items-center gap-1">
-              <Link
-                href="/blog"
-                onClick={handleNavClick("/blog")}
-                className="rounded-full px-4 py-1 text-sm text-[#858585] transition hover:bg-[rgba(255,255,255,0.06)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-              >
-                블로그
-              </Link>
+              {showBlog ? (
+                <Link
+                  href="/blog"
+                  onClick={handleNavClick("/blog")}
+                  className="rounded-full px-4 py-1 text-sm text-[#858585] transition hover:bg-[rgba(255,255,255,0.06)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                >
+                  블로그
+                </Link>
+              ) : null}
               <PrimaryButton
                 href={GOOGLE_FORM_URL}
                 label="데모 신청하기"
@@ -100,7 +107,7 @@ export default function HeaderSection() {
           />
         </button>
         <nav className="h-14 items-center gap-2 rounded-full border border-[#2f2f2f] bg-[rgba(17,17,19,0.7)] px-3 backdrop-blur md:flex">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <a
               key={item.label}
               href={item.href}

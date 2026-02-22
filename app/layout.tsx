@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Suspense } from "react";
 import TopProgressBar from "@/components/ui/TopProgressBar";
 import "./globals.css";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://getmax.kr"),
@@ -51,6 +54,19 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased">
+        {GA_ID ? (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `}
+            </Script>
+          </>
+        ) : null}
         <Suspense fallback={null}>
           <TopProgressBar />
         </Suspense>
