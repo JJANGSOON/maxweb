@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Box v1</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --surface: #161a22;
+      --surface-2: #1b2230;
+      --line: #2a3345;
+      --text: #e6edf8;
+      --muted: #94a0b8;
+      --accent: #4f7cff;
+      --accent-hover: #3f6df1;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 20% 15%, #171d2b 0%, #0f1115 45%, #0b0d12 100%);
+      color: var(--text);
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+      padding: 24px;
+    }
+
+    .chatbox {
+      width: min(920px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #171d2a 0%, #121722 100%);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      min-height: 520px;
+    }
+
+    .head {
+      height: 58px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .head .title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .head .model {
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.02);
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .files {
+      min-height: 56px;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .files.empty { display: none; }
+
+    .file-chip {
+      height: 32px;
+      max-width: 240px;
+      border: 1px solid #33415b;
+      border-radius: 999px;
+      padding: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #c8d3ea;
+      background: #1a2334;
+      font-size: 12px;
+    }
+
+    .file-chip .name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-chip .remove {
+      border: 0;
+      background: transparent;
+      color: #9fb1d6;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .messages {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+      min-height: 260px;
+    }
+
+    .msg {
+      max-width: 76%;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 11px 12px;
+      font-size: 14px;
+      line-height: 1.52;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: #233150;
+      border-color: #334f8e;
+    }
+
+    .msg.assistant {
+      align-self: flex-start;
+      background: #1a212f;
+      border-color: #2e3a52;
+      color: #d9e2f3;
+    }
+
+    .composer {
+      border-top: 1px solid var(--line);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 8px;
+      align-items: end;
+      background: #121722;
+    }
+
+    .icon-btn {
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: #c2cee6;
+      padding: 0 12px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .icon-btn:hover { background: var(--surface-2); }
+
+    .prompt {
+      min-height: 40px;
+      max-height: 140px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #161d2a;
+      color: #dfe7f8;
+      resize: vertical;
+      padding: 10px 12px;
+      font: inherit;
+      line-height: 1.5;
+    }
+
+    .send {
+      height: 40px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      padding: 0 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .send:hover { background: var(--accent-hover); }
+
+    .send:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .hint {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 2px 2px 0;
+    }
+
+    @media (max-width: 780px) {
+      .chatbox { min-height: 560px; }
+      .msg { max-width: 92%; }
+      .composer {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+          "prompt prompt"
+          "attach send"
+          "hint hint";
+      }
+      .icon-btn.attach { grid-area: attach; }
+      .prompt { grid-area: prompt; }
+      .send { grid-area: send; }
+      .hint { grid-area: hint; }
+    }
+  </style>
+</head>
+<body>
+  <section class="chatbox" aria-label="Chat box component">
+    <header class="head">
+      <div class="title">MAX Assistant Chat</div>
+      <div class="model">Model: MAX-4.1</div>
+    </header>
+
+    <div id="files" class="files empty" aria-live="polite"></div>
+
+    <div class="messages">
+      <div class="msg assistant">안녕하세요. 업로드한 파일 내용을 기반으로 분석을 도와드릴게요.</div>
+      <div class="msg user">이번 주 재고 리포트와 주문 CSV를 비교해서 이상치 찾아줘.</div>
+      <div class="msg assistant">좋아요. 파일을 올려주시면 먼저 스키마를 확인하고 차이 요약부터 보여드릴게요.</div>
+    </div>
+
+    <footer class="composer">
+      <input id="fileInput" type="file" multiple hidden />
+      <button id="attachBtn" class="icon-btn attach" type="button">+ Upload</button>
+      <textarea id="prompt" class="prompt" placeholder="메시지를 입력하세요..."></textarea>
+      <button id="sendBtn" class="send" type="button">Send</button>
+      <div class="hint">지원 예시: PDF, CSV, XLSX, DOCX (최대 10개)</div>
+    </footer>
+  </section>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const attachBtn = document.getElementById("attachBtn");
+    const filesWrap = document.getElementById("files");
+    const prompt = document.getElementById("prompt");
+    const sendBtn = document.getElementById("sendBtn");
+
+    /** @type {File[]} */
+    let selectedFiles = [];
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return `${bytes}B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+    }
+
+    function updateSendState() {
+      const hasPrompt = prompt.value.trim().length > 0;
+      sendBtn.disabled = !hasPrompt && selectedFiles.length === 0;
+    }
+
+    function renderFiles() {
+      filesWrap.innerHTML = "";
+
+      if (selectedFiles.length === 0) {
+        filesWrap.classList.add("empty");
+        updateSendState();
+        return;
+      }
+
+      filesWrap.classList.remove("empty");
+
+      selectedFiles.forEach((file, idx) => {
+        const chip = document.createElement("div");
+        chip.className = "file-chip";
+
+        const name = document.createElement("span");
+        name.className = "name";
+        name.textContent = `${file.name} (${formatSize(file.size)})`;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "remove";
+        removeBtn.type = "button";
+        removeBtn.setAttribute("aria-label", `${file.name} 제거`);
+        removeBtn.textContent = "✕";
+        removeBtn.addEventListener("click", () => {
+          selectedFiles = selectedFiles.filter((_, i) => i !== idx);
+          renderFiles();
+        });
+
+        chip.append(name, removeBtn);
+        filesWrap.appendChild(chip);
+      });
+
+      updateSendState();
+    }
+
+    attachBtn.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", () => {
+      const nextFiles = Array.from(fileInput.files || []);
+      if (nextFiles.length === 0) return;
+
+      const merged = [...selectedFiles, ...nextFiles];
+      const unique = [];
+      const keySet = new Set();
+
+      merged.forEach((file) => {
+        const key = `${file.name}-${file.size}-${file.lastModified}`;
+        if (!keySet.has(key)) {
+          keySet.add(key);
+          unique.push(file);
+        }
+      });
+
+      selectedFiles = unique.slice(0, 10);
+      fileInput.value = "";
+      renderFiles();
+    });
+
+    prompt.addEventListener("input", updateSendState);
+
+    sendBtn.addEventListener("click", () => {
+      const text = prompt.value.trim();
+      if (!text && selectedFiles.length === 0) return;
+
+      prompt.value = "";
+      selectedFiles = [];
+      renderFiles();
+      updateSendState();
+    });
+
+    updateSendState();
+  </script>
+</body>
+</html>

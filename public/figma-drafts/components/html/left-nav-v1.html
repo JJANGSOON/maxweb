@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Left Nav v1</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --rail: #ffffff;
+      --rail-line: #e5e7eb;
+      --text: #6b7280;
+      --text-strong: #111827;
+      --hover: #f3f4f6;
+      --active: #e5e7eb;
+      --indicator: #4b5563;
+      --focus: #9ca3af;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      background: linear-gradient(135deg, #f8fafc 0%, #f3f4f6 70%, #eceff3 100%);
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+      color: var(--text-strong);
+    }
+
+    .rail {
+      width: 256px;
+      height: 100vh;
+      border-right: 1px solid var(--rail-line);
+      background: var(--rail);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .brand {
+      min-height: 64px;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      background: #f9fafb;
+    }
+
+    .brand-logo {
+      width: 88px;
+      height: auto;
+      display: block;
+    }
+
+    .brand span { font-size: 12px; color: var(--text); }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .item {
+      position: relative;
+      height: 40px;
+      border-radius: 10px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      color: var(--text);
+      text-decoration: none;
+      outline: none;
+    }
+
+    .item:hover {
+      background: var(--hover);
+      color: #111827;
+    }
+
+    .item:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .item.active {
+      background: var(--active);
+      color: var(--text-strong);
+      font-weight: 600;
+    }
+
+    .item.active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 3px;
+      border-radius: 99px;
+      background: var(--indicator);
+    }
+
+    .bottom {
+      border-top: 1px solid var(--rail-line);
+      padding-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .content {
+      flex: 1;
+      padding: 28px;
+      display: grid;
+      place-items: center;
+      color: #6b7280;
+      font-size: 18px;
+    }
+
+    @media (max-width: 1199px) {
+      .rail { width: 220px; }
+    }
+
+    @media (max-width: 767px) {
+      .rail { display: none; }
+      .content { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="rail" aria-label="Left navigation">
+    <div class="brand">
+      <img class="brand-logo" src="/header-logo.svg" alt="MAX" />
+      <span>마지언타이틀 워크스페이스</span>
+    </div>
+
+    <nav class="menu" aria-label="Primary">
+      <a class="item active" href="#" aria-current="page">Dashboard</a>
+      <a class="item" href="#">Inventory</a>
+      <a class="item" href="#">Forecast</a>
+      <a class="item" href="#">Orders</a>
+      <a class="item" href="#">Alerts</a>
+      <a class="item" href="#">Reports</a>
+    </nav>
+
+    <div class="bottom" aria-label="Secondary">
+      <a class="item" href="#">Settings</a>
+      <a class="item" href="#">Help</a>
+      <a class="item" href="#">Logout</a>
+    </div>
+  </aside>
+
+  <main class="content">Content Area Placeholder</main>
+</body>
+</html>

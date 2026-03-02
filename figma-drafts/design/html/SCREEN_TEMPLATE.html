@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Draft Template</title>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --surface: #ffffff;
+      --text: #141826;
+      --muted: #5b6478;
+      --line: #d9dfeb;
+      --accent: #1f6fff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at 15% 20%, #ffffff 0%, #eef2fb 55%, #e8edf8 100%);
+      color: var(--text);
+      font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      padding: 40px 20px;
+    }
+
+    .frame {
+      max-width: 1080px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--surface);
+      box-shadow: 0 20px 48px rgba(24, 39, 75, 0.12);
+      padding: 28px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .card {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      background: #fafbff;
+    }
+
+    .btn {
+      margin-top: 20px;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <section class="frame">
+    <h1>Draft Title</h1>
+    <p>이 파일을 복사해서 시안 화면을 빠르게 만들어 캡처하세요.</p>
+    <div class="card">
+      컴포넌트 배치, 여백, 타이포를 자유롭게 수정하면 됩니다.
+    </div>
+    <button class="btn">Primary Action</button>
+  </section>
+</body>
+</html>
