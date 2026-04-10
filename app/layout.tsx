@@ -52,8 +52,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body className="antialiased">
+    <html lang="ko" suppressHydrationWarning>
+      <body className="antialiased" suppressHydrationWarning>
         {GA_ID ? (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
