@@ -6,6 +6,7 @@ import { type MouseEvent } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import PrimaryButton from "../ui/PrimaryButton";
 import { startTopProgress } from "../ui/TopProgressBar";
+import { CTA_LOCATIONS } from "@/lib/analytics";
 import { GOOGLE_FORM_URL, NAV_ITEMS } from "@/lib/constants";
 
 type HeaderSectionProps = {
@@ -29,18 +30,6 @@ export default function HeaderSection({ showBlog = true }: HeaderSectionProps) {
     gtag?.("event", "header_menu_click", {
       menu_label: menuLabel,
       menu_href: menuHref,
-      page_path: window.location.pathname,
-    });
-  };
-
-  const trackHeaderCtaClick = () => {
-    const gtag = (
-      window as Window & { gtag?: (...args: unknown[]) => void }
-    ).gtag;
-
-    gtag?.("event", "header_cta_click", {
-      cta_label: "데모 신청하기",
-      cta_href: GOOGLE_FORM_URL,
       page_path: window.location.pathname,
     });
   };
@@ -111,8 +100,7 @@ export default function HeaderSection({ showBlog = true }: HeaderSectionProps) {
               <PrimaryButton
                 href={GOOGLE_FORM_URL}
                 label="데모 신청하기"
-                onClick={trackHeaderCtaClick}
-                analyticsLocation="header_mobile"
+                analyticsLocation={CTA_LOCATIONS.HEADER_MOBILE}
                 className="!h-8 !px-3 !gap-1 text-[12px] !font-normal whitespace-nowrap"
               />
             </div>
@@ -150,8 +138,7 @@ export default function HeaderSection({ showBlog = true }: HeaderSectionProps) {
           <PrimaryButton
             href={GOOGLE_FORM_URL}
             label="데모 신청하기"
-            onClick={trackHeaderCtaClick}
-            analyticsLocation="header_desktop"
+            analyticsLocation={CTA_LOCATIONS.HEADER_DESKTOP}
             className="!h-8 !px-4 text-xs"
           />
         </nav>

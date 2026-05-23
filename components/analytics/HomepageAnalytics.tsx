@@ -1,21 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { trackEvent } from "@/lib/analytics";
+import { GA_SECTION_IDS, SECTION_VIEW_EVENTS, trackEvent, type GaSectionId } from "@/lib/analytics";
 
 const SECTION_VIEW_THRESHOLD = 0.35;
 const DWELL_SECONDS = 10;
 const SCROLL_DEPTHS = [25, 50, 75, 90] as const;
-
-type ViewSectionKey = "hero" | "features-focus" | "features-workflow" | "heymax" | "cta";
-
-const SECTION_VIEW_EVENTS: Record<ViewSectionKey, string> = {
-  hero: "hero_view",
-  "features-focus": "feature_view",
-  "features-workflow": "workflow_view",
-  heymax: "heymax_view",
-  cta: "pricing_view",
-};
 
 export default function HomepageAnalytics() {
   useEffect(() => {
@@ -40,7 +30,7 @@ export default function HomepageAnalytics() {
           const sectionKey = entry.target.getAttribute("data-ga-section");
           if (!sectionKey) continue;
 
-          const sectionEvent = SECTION_VIEW_EVENTS[sectionKey as ViewSectionKey];
+          const sectionEvent = SECTION_VIEW_EVENTS[sectionKey as GaSectionId];
           if (entry.isIntersecting && entry.intersectionRatio >= SECTION_VIEW_THRESHOLD) {
             if (sectionEvent && !sentSectionViews.has(sectionKey)) {
               sentSectionViews.add(sectionKey);
@@ -50,12 +40,16 @@ export default function HomepageAnalytics() {
               });
             }
 
-            if (sectionKey === "cta" && !sentDwellEvents.has(sectionKey) && !activeDwellStart.has(sectionKey)) {
+            if (
+              sectionKey === GA_SECTION_IDS.CTA &&
+              !sentDwellEvents.has(sectionKey) &&
+              !activeDwellStart.has(sectionKey)
+            ) {
               activeDwellStart.set(sectionKey, window.performance.now());
               const timerId = window.setTimeout(() => {
                 sentDwellEvents.add(sectionKey);
                 trackEvent("pricing_dwell_10s", {
-                  section_name: "cta",
+                  section_name: GA_SECTION_IDS.CTA,
                   dwell_seconds: DWELL_SECONDS,
                   page_path: window.location.pathname,
                 });

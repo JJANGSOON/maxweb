@@ -56,16 +56,18 @@ export default function RootLayout({
       <body className="antialiased" suppressHydrationWarning>
         {GA_ID ? (
           <>
-            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
-            <Script id="google-analytics" strategy="afterInteractive">
+            <Script id="google-analytics-init" strategy="beforeInteractive">
               {`
                 window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_ID}', { send_page_view: false });
+                window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
+                window.gtag('js', new Date());
+                window.gtag('config', '${GA_ID}', { send_page_view: false });
               `}
             </Script>
-            <GoogleAnalyticsPageView measurementId={GA_ID} />
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+            <Suspense fallback={null}>
+              <GoogleAnalyticsPageView measurementId={GA_ID} />
+            </Suspense>
           </>
         ) : null}
         <Suspense fallback={null}>
