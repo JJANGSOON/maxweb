@@ -112,6 +112,7 @@ export default function HeaderSection({ showBlog = true }: HeaderSectionProps) {
                 href={GOOGLE_FORM_URL}
                 label="데모 신청하기"
                 onClick={trackHeaderCtaClick}
+                analyticsLocation="header_mobile"
                 className="!h-8 !px-3 !gap-1 text-[12px] !font-normal whitespace-nowrap"
               />
             </div>
@@ -150,6 +151,7 @@ export default function HeaderSection({ showBlog = true }: HeaderSectionProps) {
             href={GOOGLE_FORM_URL}
             label="데모 신청하기"
             onClick={trackHeaderCtaClick}
+            analyticsLocation="header_desktop"
             className="!h-8 !px-4 text-xs"
           />
         </nav>

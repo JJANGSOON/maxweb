@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Suspense } from "react";
+import GoogleAnalyticsPageView from "@/components/analytics/GoogleAnalyticsPageView";
 import TopProgressBar from "@/components/ui/TopProgressBar";
 import "./globals.css";
 
@@ -61,9 +62,10 @@ export default function RootLayout({
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${GA_ID}', { debug_mode: true });
+                gtag('config', '${GA_ID}', { send_page_view: false });
               `}
             </Script>
+            <GoogleAnalyticsPageView measurementId={GA_ID} />
           </>
         ) : null}
         <Suspense fallback={null}>

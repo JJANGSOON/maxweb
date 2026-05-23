@@ -4,7 +4,7 @@ import { GOOGLE_FORM_URL } from "@/lib/constants";
 
 export default function HeroSection() {
   return (
-    <section className="pt-36 md:pt-[266px]" id="hero">
+    <section className="pt-36 md:pt-[266px]" id="hero" data-ga-section="hero">
       <Container className="text-center">
         <h1 className="mx-auto max-w-[920px] break-keep text-4xl leading-tight tracking-[-0.03em] text-white md:text-6xl">
           성장하는 브랜드를 위한 회전일수 기반
@@ -16,7 +16,13 @@ export default function HeroSection() {
           <br />
           매출은 최대화하세요
         </p>
-        <PrimaryButton href={GOOGLE_FORM_URL} label="맥스 데모 신청하기" className="mt-14" />
+        <PrimaryButton
+          href={GOOGLE_FORM_URL}
+          label="맥스 데모 신청하기"
+          className="mt-14"
+          analyticsLocation="hero"
+          analyticsLabel="맥스 데모 신청하기"
+        />
       </Container>
     </section>
   );
