@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { CTA_LOCATIONS, GA_SECTION_IDS, getCtaAnalyticsAttributes } from "@/lib/analytics";
 import { GOOGLE_FORM_URL, SOCIAL_LOGOS, TEMP_HIDDEN_SOCIAL_LOGO_NAME_SET } from "@/lib/constants";
 
 const HEYMAX_CHIPS = [
@@ -18,7 +19,7 @@ function MobileContainer({ children, className = "" }: { children: React.ReactNo
 
 function MobileHero() {
   return (
-    <section id="hero" className="min-h-[324px]">
+    <section id={GA_SECTION_IDS.HERO} className="min-h-[324px]" data-ga-section={GA_SECTION_IDS.HERO}>
       <MobileContainer className="px-5 pt-6 text-center">
         <h1 className="break-keep text-[34px] font-semibold leading-[48px] tracking-[-0.6px] text-white min-[390px]:text-[36px]">
           브랜드를 위한 회전일수 기반 인공지능 솔루션
@@ -33,6 +34,10 @@ function MobileHero() {
             href={GOOGLE_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
+            {...getCtaAnalyticsAttributes({
+              label: "맥스 데모 신청하기",
+              location: CTA_LOCATIONS.HERO_MOBILE,
+            })}
             className="inline-flex h-12 w-[240px] items-center justify-center gap-2 rounded-full bg-white text-sm font-medium text-[#111113]"
           >
             <span>맥스 데모 신청하기</span>
@@ -92,7 +97,11 @@ function MobileFeatureFocus() {
   ] as const;
 
   return (
-    <section id="features-focus" className="mt-[104px]">
+    <section
+      id={GA_SECTION_IDS.FEATURES_FOCUS}
+      className="mt-[104px]"
+      data-ga-section={GA_SECTION_IDS.FEATURES_FOCUS}
+    >
       <MobileContainer className="px-5">
         <h2 className="break-keep text-center text-2xl font-semibold leading-8 tracking-[-0.5px] text-white">
           맥스 AI 재고 에이전트에게 맡기고
@@ -124,7 +133,11 @@ function MobileFeatureFocus() {
 
 function MobileFeatureWorkflow() {
   return (
-    <section id="features-workflow" className="mt-[104px]">
+    <section
+      id={GA_SECTION_IDS.FEATURES_WORKFLOW}
+      className="mt-[104px]"
+      data-ga-section={GA_SECTION_IDS.FEATURES_WORKFLOW}
+    >
       <MobileContainer className="px-5">
         <h2 className="break-keep text-center text-2xl font-semibold leading-8 tracking-[-0.5px] text-white">
           맥스와 대화로 워크플로우를 만들고
@@ -161,7 +174,7 @@ function MobileHeyMax() {
   ] as const;
 
   return (
-    <section id="heymax" className="relative mt-[104px]">
+    <section id={GA_SECTION_IDS.HEYMAX} className="relative mt-[104px]" data-ga-section={GA_SECTION_IDS.HEYMAX}>
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-[151px] z-0 h-[741px]">
         <div
           className="absolute inset-0"
@@ -258,7 +271,7 @@ function MobileHeyMax() {
 
 function MobileCta() {
   return (
-    <section id="cta" className="mt-[90px] h-[352px] bg-[#191919]">
+    <section id={GA_SECTION_IDS.CTA} className="mt-[90px] h-[352px] bg-[#191919]" data-ga-section={GA_SECTION_IDS.CTA}>
       <MobileContainer className="h-full px-5 pt-[104px]">
         <h2 className="break-keep text-center text-2xl font-normal leading-7 tracking-[-0.5px] text-white">
           <span className="block">맥스 AI에 대해 더 알고 싶으신가요?</span>
@@ -269,6 +282,10 @@ function MobileCta() {
             href={GOOGLE_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
+            {...getCtaAnalyticsAttributes({
+              label: "문의하기",
+              location: CTA_LOCATIONS.PRICING_MOBILE,
+            })}
             className="inline-flex h-12 w-[240px] items-center justify-center gap-2 rounded-[360px] bg-white pl-4 pr-3 text-sm font-normal text-[#111113]"
           >
             <span>문의하기</span>

@@ -1,3 +1,4 @@
+import HomepageAnalytics from "@/components/analytics/HomepageAnalytics";
 import CtaSection from "@/components/sections/CtaSection";
 import FeatureFocusSection from "@/components/sections/FeatureFocusSection";
 import FeatureWorkflowSection from "@/components/sections/FeatureWorkflowSection";
@@ -11,6 +12,7 @@ import MobileLandingSections from "@/components/sections/mobile/MobileLandingSec
 export default function Home() {
   return (
     <>
+      <HomepageAnalytics />
       <HeaderSection showBlog={false} />
       <div className="relative min-h-screen overflow-x-clip bg-[#111113] max-[1024px]:hidden">
         <div

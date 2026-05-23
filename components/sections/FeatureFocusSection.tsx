@@ -1,10 +1,15 @@
 import Image from "next/image";
 import Container from "../ui/Container";
+import { GA_SECTION_IDS } from "@/lib/analytics";
 import { FOCUS_FEATURE_CARDS } from "@/lib/constants";
 
 export default function FeatureFocusSection() {
   return (
-    <section className="mt-[240px]" id="features-focus">
+    <section
+      className="mt-[240px]"
+      id={GA_SECTION_IDS.FEATURES_FOCUS}
+      data-ga-section={GA_SECTION_IDS.FEATURES_FOCUS}
+    >
       <Container>
         <h2 className="text-center text-[36px] font-semibold leading-[50px] tracking-[-0.5px] text-white">
           맥스 AI 재고 관리 에이전트에게 맡기고

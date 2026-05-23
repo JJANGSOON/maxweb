@@ -1,4 +1,5 @@
 import Container from "../ui/Container";
+import { GA_SECTION_IDS } from "@/lib/analytics";
 
 const FLOW_CARDS = [
   { title: "판매 급변 감지", type: "Trigger", x: 97, y: 0, dot: "#35e6ea" },
@@ -22,7 +23,7 @@ const HEYMAX_CHIPS = [
 
 export default function HeyMaxSection() {
   return (
-    <section className="relative mt-[240px]" id="heymax">
+    <section className="relative mt-[240px]" id={GA_SECTION_IDS.HEYMAX} data-ga-section={GA_SECTION_IDS.HEYMAX}>
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[900px]">
         <div
           className="absolute inset-0"
